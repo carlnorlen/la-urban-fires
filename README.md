@@ -11,8 +11,14 @@ The data sets required to create figures, and tables will be available as a USGS
 All data in STATA .dta format used for modeling and table creation.
   *  stata_all_revised_data.dta
 
+Census Block scale urban morphology data processed for use in socio-economic analysis.
+  *  census_blocks_dins_destroyed_burned_area_20250424.csv
+
 Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg)
   *  combined_la_fires_parcel_all_structures_data.gpkg
+
+Parcel scale data on fire impacts and urban morphology characteristics as a CSV (.CSV)
+  *  combined_la_fires_parcel_all_structures_data_20250414_v2.csv
 
 Census Block scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg)
   *  la_fires_census_blocks_dins_destroyed_burned_area.gpkg
