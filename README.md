@@ -6,7 +6,7 @@ Norlen, C.A.; Sharma, S.; Escobedo, F.J. (in review) "Socio-Ecological Impacts o
 
 ## Data Access
 The code and data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available as a github 
-repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also through the code editor (). 
+repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also available through the Code Editor (https://code.earthengine.google.com/?accept_repo=users/cnorlen-usgs/la-urban-fire). 
 
 ## Description of the data and file structure
 All data in STATA .dta format used for modeling and table creation.
