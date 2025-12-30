@@ -5,7 +5,8 @@ These data sets and scripts allow for the creation of all figures and supplement
 Norlen, C.A.; Sharma, S.; Escobedo, F.J. (in review) "Socio-Ecological Impacts of the 2025 Los Angeles Urban Fires on Communities, Neighborhoods, and Homes" Nature Communications
 
 ## Data Access
-The data sets required to create figures, and tables will be available as a USGS ScienceBase data release upon publication. Datasets are available as part of the Code Ocean peer review process.
+The code and data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available as a github 
+repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also through the code editor (). 
 
 ## Description of the data and file structure
 All data in STATA .dta format used for modeling and table creation.
@@ -27,7 +28,6 @@ Socio-economic Census Block data used for figure creation
   *  census_blocks_sample_sociodemographic_20250502.csv
   
 ## Sharing/Access information
-
 Data was derived from these publicly available sources:
   * CAL FIRE 2023 perimeters:https://www.fire.ca.gov/what-we-do/fire-resource-assessment-program/fire-perimeters
   * WGIS 2025 Fire Perimeters: https://data-nifc.opendata.arcgis.com/pages/faqs
@@ -56,7 +56,7 @@ Script doing final analysis and creating all Main Text and Supplementary Figures
 
 ##STATA Code
 STATA code for running models and producing Tables 1, 2, 3, 4, S1, S2, S3, S4
-  *june_revision_dofile_submit.do
+  * june_revision_dofile_submit.do
 
 ## GEE JavaScript Code
 Script for calculating the number of building footprint overlaps in each parcel and census block.
