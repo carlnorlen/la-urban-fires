@@ -1,14 +1,19 @@
-#Purpose: Filter, combined, and write underlying data for the LA Fires
+#Purpose: Filter, combined, and write data for the LA Fires
 #Created by: Carl A. Norlen
 #Created date: 3/6/2025
 #Updated date: 4/2/2025
 
+#install packages
+# install.packages(c('gstat'))
+
 #Packages for analysis
 my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 'osmdata', 'rethnicity', 'terra')
 
+# library(tidycensus)
 #Load the packages
 lapply(my_packages, require, character.only = TRUE)
 options(tigris_use_cache = TRUE)
+# census_api_key('a37785ade28119ad5a1ba3ffc67f3a9812db4d23', install = TRUE)
 
 #Data directory
 dir <- 'C://Users//CarlNorlen//mystuff//data//urban-fires//'
@@ -21,11 +26,10 @@ c <- st_crs(frap)
 
 #Select NIFC perimeters for Palisades and Eaton Fires
 wgis <- st_read(paste0(dir, 'WFIGS_Interagency//Perimeters.shp'))
-
-#Select just the LA Fires Data
+# plot(wgis)
 la.fires <- wgis %>% filter(poly_Incid %in% c('Eaton', 'PALISADES'))
 
-#Transform the LA fires to CA Albers
+#TRansform the LA fires to CA Albers
 la.fires <- st_transform(la.fires, c)
 
 #Add a 100-meter buffer to the fire
@@ -43,6 +47,15 @@ building.footprint.filter <- building.footprint %>% st_filter(la.fires.buffer, .
 #Write the filtered file
 st_write(building.footprint.filter, paste0(dir,'la.fires.building.footprint.gpkg'), delete_layer = TRUE)
 
+#Add the Los Angeles Tree Cover
+# la.tree.cover <- terra::rast(paste0(dir, 'Los_Angeles_and_Long_Beach_and_Anaheim//urbancanopy2022//Los_Angeles_and_Long_Beach_and_Anaheim_canopy2022.tif'))
+# # crs(frap)
+# #Set the CRS
+# la.tree.cover <- la.tree.cover |> project(crs(frap))
+# 
+# la.fires.buffer |> st_union() |> st_as_sf() |> vect() |> plot()
+# mask <- rasterize(la.fires.buffer |> st_union() |> st_as_sf() |> vect(), la.tree.cover, values = 1)
+# terra::raster
 #Filter and save the LA DINS data
 #DINS full California data set
 dins.ca <- st_read(paste0(dir, 'DINS//POSTFIRE_MASTER_DATA_SHARE.gpkg'))
@@ -87,14 +100,14 @@ core.logic.filter <- core.logic.combine %>% st_filter(la.fires.buffer, .predicat
 st_write(core.logic.filter,  paste0(dir,'og_06037_points_pro_combine_la_fires.gpkg'), delete_layer = TRUE)
 
 #Add LA County Parcels
-# la.parcels <- st_read(paste0(dir, 'LACounty_Parcels_Shapefile//LACounty_Parcels.shp'))
-# 
-# #Transform the CRS of the LA Parcels
-# la.parcels <- st_transform(la.parcels, c)
-# 
-# #Filter for the just the parcels within the Fire Perimeters
-# la.parcels.filter <- la.parcels %>% st_filter(la.fires.buffer, .predicates= st_intersects())
-# 
-# #Write the filtered LA Parcels data as a Geopackage
-# #Can this be removed?
-# st_write(la.parcels.filter,  paste0(dir,'LACounty_Parcels_la_fires.gpkg'), delete_layer = TRUE)
+la.parcels <- st_read(paste0(dir, 'LACounty_Parcels_Shapefile//LACounty_Parcels.shp'))
+
+#Transform the CRS of the LA Parcels
+la.parcels <- st_transform(la.parcels, c)
+
+#Filter for the just the parcels within the Fire Perimeters
+la.parcels.filter <- la.parcels %>% st_filter(la.fires.buffer, .predicates= st_intersects())
+
+#Write the filtered LA Parcels data as a Geopackage
+st_write(la.parcels.filter,  paste0(dir,'LACounty_Parcels_la_fires.gpkg'), delete_layer = TRUE)
+

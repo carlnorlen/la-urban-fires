@@ -3,12 +3,13 @@
 #Created date: 3/6/2025
 #Updated date: 4/14/2025
 
-#List of packages to load
 my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 'osmdata', 'rethnicity', 'gstat')
-
+# library(gstat)
+# library(tidycensus)
 #Load the packages
 lapply(my_packages, require, character.only = TRUE)
 options(tigris_use_cache = TRUE)
+# census_api_key('a37785ade28119ad5a1ba3ffc67f3a9812db4d23', install = TRUE)
 
 #Data directory
 dir <- 'C://Users//CarlNorlen//mystuff//data//urban-fires//'
@@ -19,13 +20,18 @@ c <- st_crs(frap)
 
 #Select NIFC perimeters for Palisades and Eaton Fires
 wgis <- st_read(paste0(dir, 'WFIGS_Interagency//Perimeters.shp'))
-
-#Select just the 2025 LA Fires
+# plot(wgis)
 la.fires <- wgis %>% filter(poly_Incid %in% c('Eaton', 'PALISADES'))
 la.fires <- st_transform(la.fires, c)
-
+# st_crs(la.fires)
 #Add a 100-meter buffer to the fire
 la.fires.buffer <- la.fires %>% st_buffer(dist = 100)
+
+#Read the full DINS data
+# dins.la.fires <- st_read(paste0(dir, 'DINS//dins_postfire_la_fires.gpkg'))
+# 
+# #Filter the DINS data
+# dins.la.residence <- dins.la.fires %>% filter(STRUCTURECATEGORY %in% c('Single Residence', 'Multiple Residence', 'Mixed Commercial/Residential'))
 
 #DINS data combined with LA parcels data
 dins.la.residence <- st_read(paste0(dir, '2025_Parcels_with_DINS_data_1400140593036023148.gpkg')) |> 
@@ -34,13 +40,16 @@ dins.la.residence <- st_read(paste0(dir, '2025_Parcels_with_DINS_data_1400140593
 #Spatially transform the data
 dins.la.residence <- st_transform(dins.la.residence, c)
 
+# #DINS original test
+# dins.test <- st_read(paste0(dir, 'DINS//dins_postfire_la_fires.gpkg'))
 #LA County Parcels
-# la.parcels <- st_read(paste0(dir, 'LACounty_Parcels_Shapefile//LACounty_Parcels.shp'))
-# la.parcels <- st_transform(la.parcels, c)
+la.parcels <- st_read(paste0(dir, 'LACounty_Parcels_Shapefile//LACounty_Parcels.shp'))
+la.parcels <- st_transform(la.parcels, c)
 
 #Add the Core Logic
 #This seems to have about 300 duplicate values
 core.logic.fires <- st_read(paste0(dir, 'og_06037_points_pro_combine_la_fires.gpkg'))
+# ggplot() + geom_sf(data = core.logic.fires)
 
 #Add the structure data filter for the fires
 nsi.fires <- st_read(paste0(dir,'nsi_2022_06_filter.gpkg'), layer = 'nsi_2022_06_filter')
@@ -48,18 +57,17 @@ nsi.fires <- st_read(paste0(dir,'nsi_2022_06_filter.gpkg'), layer = 'nsi_2022_06
 #Add Filtered Microsoft structure data
 la.fires.building.footprint <- st_read(paste0(dir,'la.fires.building.footprint.gpkg'))
 
-#Add fields to the building footprint data
 la.fires.building.footprint <- la.fires.building.footprint %>% mutate(footprint.msq = set_units(st_area(la.fires.building.footprint), 'm^2'), footprint.hectare = set_units(st_area(la.fires.building.footprint), 'hectares'))
 
-#Load the building overlap data
 la.fires.building.overlap <- st_read(paste0(dir, 'building_footprint_overlaps.geojson'))
 la.fires.building.overlap <- la.fires.building.overlap |> select(-c('dstnc_c')) |> rename(footprint.acre = ftprnt_c, footprint.sqft = ftprnt_s)
 
-#Transform the building overlap data
 la.fires.building.overlap <- la.fires.building.overlap |> st_transform(c)
 
-#Create new corrected fields for the building overlap data
 la.fires.building.overlap <- la.fires.building.overlap |> mutate(zone_one_overlap_correct = zone_one_overlap , zone_two_overlap_correct = zone_two_overlap - zone_one_overlap - zone_zero_overlap)
+
+
+#Test core logic filtering
 
 #Join the Parcels and the core logic together
 #Filter the core logic data so that there are only distinct APN vales (some parcels have the same APN)
@@ -97,11 +105,18 @@ fullname <- all.join |> filter(!is.na(OWN1_LAST) & !is.na(OWN1_FRST)) %>% mutate
 #Calculate the last name ethnicity
 lastname <- all.join |> filter(!is.na(OWN1_LAST) & is.na(OWN1_FRST)) |> mutate(race = (predict_ethnicity(lastnames = as.vector((all.join %>% filter(!is.na(OWN1_LAST) & is.na(OWN1_FRST)))$OWN1_LAST), method = "lastname"))$race)
 
-#Fill in NA data
 name.na <- all.join |> filter(is.na(OWN1_LAST) & is.na(OWN1_FRST)) |> mutate(race = NA)
+
+# ethnicity <- all.join |> mutate(race = case_when(!is.na(OWN1_LAST) & !is.na(OWN1_FRST) ~ list((predict_ethnicity(lastnames = as.vector((all.join %>% filter(!is.na(OWN1_LAST) & !is.na(OWN1_FRST)))$OWN1_LAST), firstnames = as.vector((all.join %>% filter(!is.na(OWN1_LAST) & !is.na(OWN1_FRST)))$OWN1_FRST), method = "fullname"))$race),
+#                                 !is.na(OWN1_LAST) & is.na(OWN1_FRST) ~ list((predict_ethnicity(lastnames = as.vector((all.join %>% filter(!is.na(OWN1_LAST) & is.na(OWN1_FRST)))$OWN1_LAST), method = "lastname"))$race),
+#                                 is.na(OWN1_LAST) & is.na(OWN1_FRST) ~ NA))
+
+# ethnicity.filter <- ethnicity |> select(c('AIN_1', 'OWN1_LAST', 'OWN1_FRST', 'race'))
 
 #Ethnicity combined between the last name and full name approaches 
 ethnicity <- rbind(fullname |> select(c('AIN_1', 'OWN1_LAST', 'OWN1_FRST', 'race')), lastname |> select(c('AIN_1', 'OWN1_LAST', 'OWN1_FRST', 'race')), name.na |> select(c('AIN_1', 'OWN1_LAST', 'OWN1_FRST', 'race')))
+
+# ethnicity |> pull(AIN_1) |> as.numeric() |> unique() |> count()
 
 #Add the full name ethnicity fields to the large data table
 all.join.ethnicity <- all.join.mutate |> left_join(as.data.frame(ethnicity) |> select(c('AIN_1', 'race')), by = 'AIN_1')
@@ -132,11 +147,18 @@ all.join.export <- all.join.ethnicity.tree |>
 #Calculate a few more variables
 all.join.export <- all.join.export |> mutate(race.num = case_when(race == 'black' ~ 1, race == 'hispanic' ~ 2, race == 'white' ~ 3, race == 'asian' ~ 4, is.na(race) ~ NA))
 
-#Create numeric damage categories
+# all.join <- all.join %>% mutate(total.value = Roll_LandValue + Roll_ImpValue)
+
+# all.join <- all.join |> mutate(built.date = case_when(YearBuilt1 > as.numeric(2008) ~ 'Built after 2008', YearBuilt1 <= as.numeric(2008) ~ 'Built 2008 or Before'))
+
 all.join.export <- all.join.export |> mutate(DAMAGE_1.num = case_when(DAMAGE_1 == 'No Damage' ~ 1, DAMAGE_1 == 'Affected (1-9%)' ~ 2, DAMAGE_1 == 'Minor (10-25%)' ~ 3, DAMAGE_1 == 'Major (26-50%)' ~ 4, DAMAGE_1 == 'Destroyed (>50%)' ~ 5, DAMAGE_1 == 'Inaccessible' ~ NA))
+
+# all.join <- all.join |> select(-c('fire.area.1910to2023'))
 
 #Add the last name ethnicity fields to the large data tables
 st_write(all.join.export, paste0(dir,'combined_la_fires_parcel_all_structures_data.gpkg'), delete_layer = TRUE)
+# colnames(all.join)
+#Write the structure data as a CSV file
+# test <- all.join.export |> as.data.frame()
 
-#Save the data as a CSV file
 write.csv(all.join.export |> as.data.frame() |> select(-c('SHAPE', 'geom')), paste0(dir,'combined_la_fires_parcel_all_structures_data_20250414_v2.csv'), row.names = FALSE)
