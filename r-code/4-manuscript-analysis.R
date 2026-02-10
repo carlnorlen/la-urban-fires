@@ -1,7 +1,7 @@
 #Purpose: Analysis the parcel and neighborhood scale impacts of the 2025 LA Urban Fres 
 #Created by: Carl A. Norlen
-#Created date: 2/10/2025
-#Updated date: 12/29/2025
+#Created date: 02/10/2025
+#Updated date: 02/09/2026
 
 #Packages for analysis
 my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 'osmdata', 'rethnicity', 'viridis', 'terra', 'reshape2', 'tidyterra', 'RStoolbox', 'RColorBrewer')
@@ -216,49 +216,36 @@ palette <- c("#1B9E77", "#7570B3", "#D95F02", "#E7298A")
 #Create a map of the overall study area
 p1a <- ggplot() +
        geom_spatraster_rgb(data = landsat.image, r=3, g=2, b=1, stretch = "lin", maxcell = 1e6) +
-       geom_sf(data = la.urban.blocks |> st_crop(la.fires.bbox), color = 'gray80', fill = NA, linewidth = 0.1, alpha = 0.5) +
+       geom_sf(data = la.urban.blocks |> st_crop(la.fires.bbox), color = 'gray80', fill = NA, linewidth = 0.05, alpha = 0.3) +
        geom_sf(data = wgis.la.difference |> mutate(which.fire = case_when(poly_Incid %in% c('Eaton') ~ 'Eaton Non-Urban', poly_Incid %in% c('PALISADES') ~ 'Palisades Non-Urban')),
                mapping = aes(color = which.fire, fill = which.fire), linewidth = 0.5, alpha = 0.5) +
        geom_sf(data = wgis.la.intersect |> mutate(which.fire = case_when(poly_Incid %in% c('Eaton') ~ 'Eaton Urban', poly_Incid %in% c('PALISADES') ~ 'Palisades Urban')),
           mapping = aes(color = which.fire, fill = which.fire), linewidth = 0.5, alpha = 0.5) +
        scale_color_manual(name = 'Fire Name', values = palette, breaks = c('Eaton Urban',  'Eaton Non-Urban', 'Palisades Urban', 'Palisades Non-Urban')) +
        scale_fill_manual(name = 'Fire Name', values = palette, breaks = c('Eaton Urban', 'Eaton Non-Urban', 'Palisades Urban', 'Palisades Non-Urban')) +
-       # guides(color = 'none') +
        coord_sf(crs = 4326 , xlim = c((la.fires.coords |> st_bbox())$xmin, (la.fires.coords |> st_bbox())$xmax), 
                              ylim = c((la.fires.coords |> st_bbox())$ymin, (la.fires.coords |> st_bbox())$ymax)) +
        theme_bw() +
        theme(axis.title = element_blank(),
              legend.position = "inside", legend.position.inside = c(0.88, 0.26))
-# p1a
 
-#annotate the firgure
+#annotate the figure
 p1a.annotate <- p1a + annotate(geom = 'segment', x = -118.22, xend = -118.17, y = 34.19, color = 'black', linewidth = 0.8) +
-                      annotate("label", x = -118.29 , y = 34.19, label = "Urban Census Blocks", color = 'black', fill = 'white', label.size = NA)
-# p1a.annotate
+                      annotate("label", x = -118.29 , y = 34.19, label = "Urban Census Blocks", color = 'black', fill = 'white')
 
 #Create a combined plot with the inset
 p1a.inset <- p1a.annotate + inset_element(inset, 0, 0.6, 0.15, 0.98)
-# p1a.inset
 
-#Excludes the largest tract be Altadena because it has many previous fires
-#Redo this figure with Census Blocks
+#Create bar chart of urban area (census blocks) burned over time
 p1b <- ggplot() + 
        geom_bar(stat = 'identity', position = 'dodge', width = 0.9, alpha = 0.5, 
                 data = fire.combine.intersect  %>% 
                 filter(as.numeric(year) >= 1910) %>% group_by(year, which.fire) %>% 
                 summarize(area = sum(area), block.area = first(block.area)), 
-                mapping = aes(x = as.numeric(year), y = as.numeric(area / block.area) * 100, color = which.fire, fill = which.fire)) + #,
-                #linewidth = 1) +
-       # geom_point(#stat = 'identity', position = 'dodge', width = 1.0,
-       #      data = fire.combine.intersect  %>% 
-       #        filter(as.numeric(year) >= 1910) %>% group_by(year, which.fire) %>% 
-       #        summarize(area = sum(area), block.area = first(block.area)), 
-       #      mapping = aes(x = as.numeric(year), y = as.numeric(area / block.area) * 100, color = which.fire), #, linetype = which.fire),
-       #      size = 2, shape = 15) +
+                mapping = aes(x = as.numeric(year), y = as.numeric(area / block.area) * 100, color = which.fire, fill = which.fire)) + 
       scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name', labels = c('Eaton', 'Palisades')) +
       scale_fill_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name', labels = c('Eaton', 'Palisades')) +
       scale_linetype_manual(name = 'Fire Name', values = c('solid', 'dashed'), labels = c('Eaton', 'Palisades')) +
-  # scale_color_brewer(palette =1, name = 'Recent Fire') +
       theme_bw() + 
       theme(legend.position = "inside", legend.position.inside = c(0.15, 0.85), 
             axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14),
@@ -270,8 +257,7 @@ p1b
 #Combine the figures
 p1 <- ggarrange(p1a.inset, p1b, nrow = 2, ncol = 1, common.legend = FALSE, labels = c('a', 'b')) 
 
-#Do a Percent affected figure for historic fires
-#Save the figure
+#Save the figure as PNG
 ggsave('Fig1_fire_area_by_year_with_landsat.png',
   plot = p1,
   path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
@@ -280,6 +266,17 @@ ggsave('Fig1_fire_area_by_year_with_landsat.png',
   height = 18,
   units = c("cm"),
   dpi = 300
+)
+
+#Save the figure as PDF
+ggsave('Fig1_fire_area_by_year_with_landsat.pdf',
+       plot = p1,
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
+       scale = 1,
+       width = 24,
+       height = 18,
+       units = c("cm"),
+       dpi = 300
 )
 
 #Calculate the values for fire time series data
@@ -297,11 +294,9 @@ palisades.bbox <- combined.block.sf |> filter(which.fire == 'Palisades' & !is.na
 p2a <- ggplot() +
       ggtitle('Palisades') +
       geom_sf(data = combined.block.sf %>% filter(which.fire == 'Palisades' & !is.na(structure_value_median) & !is.na(structure.count) & UR20 == 'U'), color = 'black', mapping = aes(fill = destroy_pct)) +
-      geom_sf(data = #rbind(
+      geom_sf(data = 
                            frap.la |> filter(year >= 1910 & which.fire == 'Palisades') |> st_union() |> st_as_sf() |> mutate(when.fire = '1910-2024'), 
-                           #wgis.la.intersect |> filter(poly_Incid == 'PALISADES') |> mutate(when.fire = '2025') |> select(when.fire) |> rename(x = geometry)), 
               mapping = aes(color = when.fire), fill = 'gray60', linewidth = 1, alpha = 0.3) +
-      # scale_color_brewer(name = 'Fire History', type = 'qual', palette = 6) +
       scale_color_manual(name = 'Fire History', values = 'gray60') +
       scale_fill_viridis_c(option = 'magma', name = 'Homes Destroyed \nin 2025 (%)') +
       scale_linetype(name = 'Fire History') +
@@ -309,7 +304,7 @@ p2a <- ggplot() +
                ylim = c(palisades.bbox$ymin, palisades.bbox$ymax),
                crs = c) +
       theme_bw() +
-  theme(legend.position = "inside", legend.direction="horizontal", legend.position.inside = c(0.24, 0.74), 
+  theme(legend.position = "right", legend.direction="horizontal",  
         legend.title = element_text(size = 10), legend.text = element_text(size = 8),
         legend.spacing = unit(1, 'mm'),
         axis.text = element_text(size = 10)) +
@@ -324,10 +319,9 @@ eaton.bbox <- combined.block.sf |> filter(which.fire == 'Eaton' & !is.na(structu
 p2b <- ggplot() +
     ggtitle('Eaton') +
     geom_sf(data = combined.block.sf %>% filter(which.fire == 'Eaton' & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), color = 'black', mapping = aes(fill = destroy_pct)) +
-    geom_sf(data = #rbind(
+    geom_sf(data = 
                        frap.la |> filter(year >= 1910 & which.fire == 'Eaton') |> st_union() |> st_as_sf() |> mutate(when.fire = '1910-2024'), 
-                       #wgis.la.intersect |> filter(poly_Incid == 'Eaton') |> mutate(when.fire = '2025') |> select(when.fire) |> rename(x = geometry)), 
-          mapping = aes(color = when.fire), fill = 'gray60', linewidth = 1 , alpha = 0.3) +
+                       mapping = aes(color = when.fire), fill = 'gray60', linewidth = 1 , alpha = 0.3) +
     scale_color_manual(name = 'Fire History', values = 'gray60') +
     scale_fill_viridis_c(option = 'magma', name = 'Homes Destroyed (%)') +
     coord_sf(xlim = c(eaton.bbox$xmin, eaton.bbox$xmax),
@@ -343,7 +337,7 @@ p2b
 f2 <- ggarrange(p2a, p2b, nrow = 2, ncol = 1, common.legend = FALSE, labels = c('a', 'b'))
 f2
 
-#Save the figure
+#Save the figure as PNG
 ggsave('Fig2_fire_history.png',
        plot = f2,
        path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
@@ -354,13 +348,23 @@ ggsave('Fig2_fire_history.png',
        dpi = 300
 )
 
+#Save the figure as PDF
+ggsave('Fig2_fire_history.pdf',
+       plot = f2,
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
+       scale = 1,
+       width = 17,
+       height = 17,
+       units = c("cm"),
+       dpi = 300
+)
+
 #Create Figure 3
-#Pre-fire Structure basal area
+#Pre-fire Structure Footprint area
 p3a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = structure.basal.area, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
-  # ggtitle('Neighborhood-Scale') +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -369,15 +373,16 @@ p3a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
   theme_bw() +
   theme(legend.position = 'none', 
         plot.title = element_text(size = 18, face = "bold"),
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
-p3a
-
+# p3a.1 <- p3a + annotate("text", x = 3800, y = 76, label = "SE", size = 4)
+# p3a.1
 #Pre-fire urban tree cover
 p3b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = tree.cover.2022, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -385,6 +390,7 @@ p3b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
   ylab('Homes Destroyed (%)') + xlab('Urban Tree Cover (%)') +
   theme_bw() +
   theme(legend.position = 'none', 
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 p3b
@@ -394,16 +400,15 @@ p3c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = zone_zero_overlap_mean, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) + 
-  # xlim(0, 5) +
-  ylab('Homes Destroyed (%)') + xlab('Number structures in DSB 0') +
+  ylab('Homes Destroyed (%)') + xlab('Number structures in DSB Zone 0') +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', '25', '50', '75', '100', '')) +
   theme(legend.position = 'none', 
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 p3c
@@ -413,16 +418,15 @@ p3d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = ww_bbg_pct_noneng_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) + 
-  # xlim(0, 5) +
   ylab('Homes Destroyed (%)') + xlab("Non-English Speaker (%)") +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', '25', '50', '75', '100', '')) +
   theme(legend.position = 'none', 
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 p3d
@@ -431,15 +435,15 @@ p3e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = ww_bbg_pct_bachelor_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 140) + 
-  # xlim(0, 5) +
   ylab('Homes Destroyed (%)') + xlab("Bachelor's Degree (%)") +
   theme_bw() +
-  theme(legend.position = c(0.85, 0.85), legend.background = element_blank(), 
+  theme(legend.position = 'right', legend.background = element_blank(), 
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 p3e
@@ -448,25 +452,35 @@ p3f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = Tpct.FA_AAp_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01, size = 5) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(-40, 125) + 
-  # xlim(0, 5) +
   ylab('Homes Destroyed (%)') + xlab("African American (%)") +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', '25', '50', '75', '100', '')) +
   theme(legend.position = 'none', 
+        legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 p3f
 
-f3 <- ggarrange(p3a, p3b, p3c, p3d, p3e, p3f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'))
+f3 <- ggarrange(p3a, p3b, p3c, p3d, p3e, p3f, nrow = 2, ncol = 3, align = "hv", common.legend = TRUE, legend = 'right', labels = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'))
 f3
 
-#Save the figure
+#Save the figure as PNG
 ggsave('Fig3_fire_damage_correlation_grid.png',
+       plot = f3,
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
+       scale = 1,
+       width = 40,
+       height = 24,
+       units = c("cm"),
+       dpi = 300
+)
+
+#Save the figure as PDF
+ggsave('Fig3_fire_damage_correlation_grid.pdf',
        plot = f3,
        path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
@@ -622,7 +636,19 @@ fig4b
 fig4 <- ggarrange(fig4a, fig4b, nrow = 1, ncol = 2, common.legend = TRUE, legend = 'right',  widths = c(1.0, 0.50))
 fig4
 
+#Create Figure as PNG
 ggsave('Fig4_combined_neighborhood_correlation_plot.png',
+       plot = fig4,
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
+       scale = 1,
+       width = 20,
+       height = 16,
+       units = c("cm"),
+       dpi = 300
+)
+
+#Create Figure as PDF
+ggsave('Fig4_combined_neighborhood_correlation_plot.pdf',
        plot = fig4,
        path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
@@ -822,7 +848,9 @@ ps3a <- ggplot(data = all.join |> filter(DAMAGE_1 != "Inaccessible" & STRUCTUREC
   ylab('Probability Structure Destroyed (%)') + xlab('Year Structure Built') +
   theme_bw() +
   guides(fill = "none") +
-  theme(legend.position = c(0.2, 0.2))
+  theme(legend.position = c(0.2, 0.2),
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3a
 
 
@@ -838,10 +866,12 @@ ps3b <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
-  ylab('Probability Structure Destroyed (%)') + xlab('Number Zone Zero Overlaps') +
+  ylab('Probability Structure Destroyed (%)') + xlab('Number of structures in Zone 0') +
   theme_bw() +
   guides(color = "none", linetype = "none") +
-  theme(legend.position = c(0.3, 0.29), legend.direction = 'vertical')
+        theme(legend.position = 'none',
+              axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+              axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3b
 
 #Mean number of structure overlaps in Zones 0 & 1
@@ -856,9 +886,11 @@ ps3c <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
-  ylab('Probability Structure Destroyed (%)') + xlab('Number Zone One Overlaps') +
+  ylab('Probability Structure Destroyed (%)') + xlab('Number of structures in Zone 1') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3c
 
 #Mean structure overlaps in Zone Two
@@ -873,9 +905,11 @@ ps3d <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
-  ylab('Probability Structure Destroyed (%)') + xlab('Number Zone Two Overlaps') +
+  ylab('Probability Structure Destroyed (%)') + xlab('Number of structures in DSB Zone 2') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3d
 
 #Median structure replacement value
@@ -892,7 +926,9 @@ ps3e <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_linetype(name = 'Fire Name') +
   ylab('Probability Structure Destroyed (%)') + xlab('Structure Replacement Value ($1000)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3e
 
 #Total occupants over 65 (%)
@@ -909,7 +945,9 @@ ps3f <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_linetype(name = 'Fire Name') +
   ylab('Probability Structure Destroyed (%)') + xlab('Occupants Over 65 (%)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3f
 
 #Pre-fire Structure basal area
@@ -990,9 +1028,8 @@ ggsave('FigS3_fire_damage_logistic_correlation_grid.png',
 fs4a <- ggplot() +
   geom_sf(data = combined.block.sf %>% filter(which.fire == 'Palisades' & !is.na(structure_value_median) & !is.na(destroy_pct) & UR20 == 'U'), 
           color = 'black', mapping = aes(fill = after_2008_pct)) +
-  geom_sf(data = #rbind(
+  geom_sf(data = 
             frap.la |> filter(year >= 1910 & which.fire == 'Palisades') |> st_union() |> st_as_sf() |> mutate(when.fire = '1910-2024'), 
-          #wgis.la.intersect |> filter(poly_Incid == 'PALISADES') |> mutate(when.fire = '2025') |> select(when.fire) |> rename(x = geometry)), 
           mapping = aes(color = when.fire), fill = 'gray60', linewidth = 1, alpha = 0.3) +
   scale_color_manual(name = 'Fire History', values = 'gray60') +
   scale_fill_viridis_c(option = 'viridis', name = 'Built After 2008 (%)', limits = c(0, 40)) +
@@ -1000,8 +1037,7 @@ fs4a <- ggplot() +
            ylim = c(palisades.bbox$ymin, palisades.bbox$ymax),
            crs = c) +
   theme_bw() +
-  theme(legend.position = "inside", legend.direction="horizontal", 
-        legend.position.inside = c(0.25, 0.75)) +
+  theme(legend.position = "right", legend.direction="horizontal") +
   guides(fill = guide_colorbar(title.position = "top", order = 2), color = guide_legend(order = 1))
 fs4a
 
@@ -1009,9 +1045,8 @@ fs4a
 fs4b <- ggplot() +
   geom_sf(data = combined.block.sf %>% filter(which.fire == 'Eaton' & !is.na(structure_value_median) & !is.na(destroy_pct) & UR20 == 'U'), color = 'black', 
           mapping = aes(fill = after_2008_pct)) +
-  geom_sf(data = #rbind(
+  geom_sf(data = 
             frap.la |> filter(year >= 1910 & which.fire == 'Eaton') |> st_union() |> st_as_sf() |> mutate(when.fire = '1910-2024'), 
-          #wgis.la.intersect |> filter(poly_Incid == 'PALISADES') |> mutate(when.fire = '2025') |> select(when.fire) |> rename(x = geometry)), 
           mapping = aes(color = when.fire), fill = 'gray60', linewidth = 1, alpha = 0.3) +
   scale_color_manual(name = 'Fire History', values = 'gray60') +
   scale_fill_viridis_c(option = 'viridis', name = 'Built After 2008 (%)', limits = c(0, 40)) +
@@ -1031,8 +1066,8 @@ ggsave('FigS4_map_after_2008_pct.png',
        plot = fs4,
        path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
-       width = 16,
-       height = 18,
+       width = 17,
+       height = 17,
        units = c("cm"),
        dpi = 300
 )
@@ -1048,9 +1083,11 @@ ps5a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) +
-  ylab('Structures Destroyed (%)') + xlab('Pre-2025 Burned Area Proportion (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Pre-2025 Burned Area Proportion (%)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5a
 
 ps5b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = year.built.median, y = destroy_pct)) +
@@ -1061,9 +1098,11 @@ ps5b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) +
-  ylab('Structures Destroyed (%)') + xlab('Median Year Structure Built') +
+  ylab('Homes Destroyed (%)') + xlab('Median Year Structure Built') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5b
 
 #Median structure replacement value
@@ -1076,9 +1115,11 @@ ps5c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(-35,125) +
-  ylab('Structures Destroyed (%)') + xlab('Median Structure Replacement Value ($1000)') +
+  ylab('Homes Destroyed (%)') + xlab('Median Structure Replacement Value ($1000)') +
   theme_bw() +
-  theme(legend.position = 'inside', legend.position.inside = c(0.85, 0.85), legend.background = element_blank())
+  theme(legend.position = 'inside', legend.position.inside = c(0.85, 0.85), legend.background = element_blank(), 
+              axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+              axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5c
 
 ps5d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), 
@@ -1090,9 +1131,11 @@ ps5d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(-70, 125) + 
-  ylab('Structures Destroyed (%)') + xlab('Structures Built after 2008 (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Homes Built after 2008 (%)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5d
 
 ps5e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = zone_one_overlap_mean, y = destroy_pct)) +
@@ -1104,9 +1147,11 @@ ps5e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) + 
   xlim(0, 5) +
-  ylab('Structures Destroyed (%)') + xlab('Mean Structures Overlaps in Zone 0 & 1 (0-9.1m)') +
+  ylab('Homes Destroyed (%)') + xlab('Mean Structures in DSB Zones 0 & 1 (0-9.1m)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5e
 
 #Mean number of structure overlaps in Zones 0, 1, & 2
@@ -1120,9 +1165,11 @@ ps5f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_linetype(name = 'Fire Name') +
   ylim(-5, 119) + 
   xlim(0, 5) +
-  ylab('Structures Destroyed (%)') + xlab('Mean Structures Overlaps in Zone 0, 1 & 2 (0-30.5m)') +
+  ylab('Homes Destroyed (%)') + xlab('Mean Structures in DSB Zones 0, 1 & 2 (0-30.5m)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps5f
 
 fs5 <- ggarrange(ps5a, ps5b, ps5c, ps5d, ps5e, ps5f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f'))
@@ -1131,9 +1178,9 @@ fs5
 #Save the figure
 ggsave('FigS5_fire_damage_urban_morphology_correlation_grid.png',
        plot = fs5,
-       path = 'C://Users//CarlNorlen//mystuff//la-urban-fires//figures',
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
-       width = 36,
+       width = 38,
        height = 24,
        units = c("cm"),
        dpi = 300
@@ -1151,9 +1198,11 @@ ps6a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) +
-  ylab('Structures Destroyed (%)') + xlab('Below Poverty (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Below Poverty (%)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6a
 
 # summary(combined.block.sf |> as.data.frame())
@@ -1166,9 +1215,11 @@ ps6b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 119) +
-  ylab('Structures Destroyed (%)') + xlab('White (%)') +
+  ylab('Homes Destroyed (%)') + xlab('White (%)') +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6b
 
 #Median structure replacement value
@@ -1181,9 +1232,11 @@ ps6c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(-35,125) +
-  ylab('Structures Destroyed (%)') + xlab('Age 65+ years old (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Age 65+ years old (%)') +
   theme_bw() +
-  theme(legend.position = 'inside', legend.position.inside = c(0.85, 0.85), legend.background = element_blank())
+  theme(legend.position = 'inside', legend.position.inside = c(0.85, 0.85), legend.background = element_blank(), 
+              axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+              axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6c
 
 ps6d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & !is.na(PercapitaInc) & UR20 == 'U'), 
@@ -1195,11 +1248,11 @@ ps6d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 150) + 
-  # xlim(0, 5) +
-  ylab('Structures Destroyed (%)') + xlab('Hispanic (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Hispanic (%)') +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', 's6', '50', '75', '100', '')) +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6d
 
 ps6e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & !is.na(PercapitaInc) & UR20 == 'U'), 
@@ -1211,11 +1264,11 @@ ps6e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(-46.5, 119) + 
-  # xlim(0, 5) +
-  ylab('Structures Destroyed (%)') + xlab('Asian (%)') +
+  ylab('Homes Destroyed (%)') + xlab('Asian (%)') +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', '25', '50', '75', '100', '')) +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6e
 
 #Mean number of structure overlaps in Zones 0, 1, & 2
@@ -1228,22 +1281,21 @@ ps6f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
   ylim(0, 129) + 
-  #xlim(0, 5) +
-  ylab('Structures Destroyed (%)') + xlab("Less than Bachelor's Degree (%)") +
+  ylab('Homes Destroyed (%)') + xlab("Less than Bachelor's Degree (%)") +
   theme_bw() +
-  # scale_y_continuous(labels = c('0', '25', '50', '75', '100', '')) +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6f
 
-fs5 <- ggarrange(ps6a, ps6b, ps6c, ps6d, ps6e, ps6f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f'))
-fs6
+fs6 <- ggarrange(ps6a, ps6b, ps6c, ps6d, ps6e, ps6f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f'))0
 
 #Save the figure
 ggsave('FigS6_fire_damage_socioeconomic_correlation_grid.png',
-       plot = f25,
-       path = 'C://Users//CarlNorlen//mystuff//la-urban-fires//figures',
+       plot = fs6,
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
-       width = 36,
+       width = 38,
        height = 24,
        units = c("cm"),
        dpi = 300
