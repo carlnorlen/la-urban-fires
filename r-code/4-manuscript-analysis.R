@@ -1,7 +1,7 @@
 #Purpose: Analysis the parcel and neighborhood scale impacts of the 2025 LA Urban Fres 
 #Created by: Carl A. Norlen
 #Created date: 02/10/2025
-#Updated date: 02/09/2026
+#Updated date: 02/10/2026
 
 #Packages for analysis
 my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 'osmdata', 'rethnicity', 'viridis', 'terra', 'reshape2', 'tidyterra', 'RStoolbox', 'RColorBrewer')
@@ -33,6 +33,8 @@ la.fires.buffer <- la.fires %>% st_buffer(dist = 100)
 
 #Load the block summary data
 block.summary <- read.csv(paste0(dir,'census_blocks_dins_destroyed_burned_area_20250424.csv'))
+
+block.summary |> colnames()
 
 #Sociodemographic cencus block data
 socio.demo.block <- read.csv(paste0(dir, 'census_blocks_sample_sociodemographic_20250502.csv'))
@@ -93,10 +95,8 @@ frap.la <- frap %>% st_filter(la.fires, .predicates = st_intersects)
 frap.la <- frap.la %>% mutate(year = as.numeric(frap.la$YEAR_))
 
 #Adding a label with the fires
-frap.la <- frap.la %>% mutate(which.fire = case_when(lengths(st_intersects(frap.la, la.fires %>% filter(poly_Incid == 'Eaton'))) > 0 ~ 'Eaton', lengths(st_intersects(frap.la, la.fires %>% filter(poly_Incid == 'PALISADES'))) > 0 ~ 'Palisades'))
-# frap.la %>% head()
-
-# plot(frap.la %>% filter(YEAR_ >= 1910) %>% st_intersection(la.fire.union))
+frap.la <- frap.la %>% mutate(which.fire = case_when(lengths(st_intersects(frap.la, la.fires %>% filter(poly_Incid == 'Eaton'))) > 0 ~ 'Eaton', 
+                                                     lengths(st_intersects(frap.la, la.fires %>% filter(poly_Incid == 'PALISADES'))) > 0 ~ 'Palisades'))
 
 #Total Fire Area
 #FRAP intersection with census tracts
@@ -148,13 +148,11 @@ la.fires.clipped <- st_buffer(la.fires,0) %>% st_intersection(la.fire.blocks)
 la.fire.clipped <- la.fires.clipped %>% mutate(fire.area.2025.acre = set_units(st_area(la.fires.clipped), 'acre'))
 
 #Get the 2025 intersections
-#Add the missing fire years here with zeros
 wgis.la.intersect %>% select(year, poly_Incid, area) %>% mutate(which.fire = case_when(poly_Incid %in% c('Eaton') ~ 'Eaton', poly_Incid %in% c('PALISADES') ~ 'Palisades'),
                                                                 block.area = case_when(which.fire %in% c('Eaton') ~ la.fire.blocks %>% filter(which.fire %in% c('Eaton') & UR20 %in% c('U')) %>% st_union() %>% st_area() %>% set_units('acre'),
                                                                 which.fire %in% c('Palisades') ~ la.fire.blocks %>% filter(which.fire %in% c('Palisades') & UR20 %in% c('U')) %>% st_union() %>% st_area() %>% set_units('acre')))
 
 #Combine the two fire perimeters
-#I'm getting an error here for some reason
 fire.combine.intersect <- rbind(frap.la.intersect.gap.fill |> select(year, which.fire, area, block.area), 
                                 wgis.la.intersect |> select(year, poly_Incid, area) |> 
                                 mutate(which.fire = case_when(poly_Incid %in% c('Eaton') ~ 'Eaton', 
@@ -164,7 +162,7 @@ fire.combine.intersect <- rbind(frap.la.intersect.gap.fill |> select(year, which
 
 
 
-#Join the Sociodemo block data
+#Join the Sociodeomgraphic block data
 #Block census groups
 socio.demo.block$TRACTCE20 <- as.character(socio.demo.block$TRACTCE20)
 socio.demo.block$BLOCKCE20 <- as.character(socio.demo.block$BLOCKCE20)
@@ -184,7 +182,7 @@ combined.block.sf <- block.dins.sf |> filter(UR20 == 'U'& !is.na(structure.count
 #Add the last name ethnicity fields to the large data tables
 all.join <- st_read(paste0(dir,'combined_la_fires_parcel_all_structures_data.gpkg'))
 
-#Add a binary dmaage layer
+#Add a binary damage layer
 all.join <- all.join |> mutate(damage.binary = case_when(DAMAGE_1 == 'Destroyed (>50%)' ~ 1, DAMAGE_1 == 'Inaccessible' ~ NA, DAMAGE_1 %in% c('Major (26-50%)', 'Minor (10-25%)', 'Affected (1-9%)', 'No Damage') ~ 0))
 
 # la.fires.ext <- la.fires |> ext() #|> project(from = st_crs(la.fires), to = c)
@@ -376,8 +374,7 @@ p3a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
         legend.title = element_text(size = 14), legend.text = element_text(size = 12),
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
-# p3a.1 <- p3a + annotate("text", x = 3800, y = 76, label = "SE", size = 4)
-# p3a.1
+
 #Pre-fire urban tree cover
 p3b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = tree.cover.2022, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
@@ -492,7 +489,6 @@ ggsave('Fig3_fire_damage_correlation_grid.pdf',
 
 #Figure 4
 #Create combined figure for correlations urban morphology with structures destroyed (%)
-#Create a Neighborhood-Scale Eaton correlation matrix
 eaton.cor <- combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U' & which.fire == 'Eaton' & !is.na(PercapitaInc)) |>
              select(c('destroy_pct', 'Tpct.FA_65.and.over_yrs._C', 'Tpct.FA_Hispanic_C', 'Tpct.FA_whitep_C', 'Tpct.FA_AAp_C', 'Tpct.FA_Ap_C', 'ww_bbg_pct_noneng_C',
                       'Tpct.FA_renter_occ_C', 'ww_pct_bbg_noschooling_C', 'ww_bbg_pct_highsch_C', 'ww_bbg_pct_associate_C', 'ww_bbg_pct_bachelor_C', 'ww_bbg_pct_graduate.Prof_C',
@@ -560,14 +556,13 @@ palisades.parcel.melt <- palisades.parcel.cor |> melt()
 #Combined neighborhood-level Eaton and Palisades damage correlations
 combined.cor <- rbind(eaton.cor[1,], palisades.cor[1,]) 
 
+#Add row names for each community
 row.names(combined.cor) <- c('Eaton', 'Palisades')
 
-combined.cor[,-1]
-combined.cor
+#Melt combined correlation matrixes
 combined.melt <- combined.cor[,-1] |> melt()
 
-# combined.cor |> melt() |> ggplot() + geom_tile()
-
+#Create the lables for the plots
 labs.2 <- c('Pre-fire tree cover (%)', 'Pre-2025 fire impacted (%)', 'Median year home built', 'Homes built after 2008 (%)',  
             'Median home replacement value ($)', 'Structure footprint area',
             'Number of structures in DSB 0', 'Number of structures in DSB 1',  'Number of structures in DSB 2', 
@@ -575,15 +570,18 @@ labs.2 <- c('Pre-fire tree cover (%)', 'Pre-2025 fire impacted (%)', 'Median yea
             "Bachelor's degree (%)", "Associated's degree (%)", "High school (%)", "No schooling (%)", "Renter (%)", "Non-English Speaker (%)",
             "Asian (%)", "African American (%)", "White (%)", "Hispanic (%)", "65 years and over (%)")
 
+#Create the labels for the combined plots
 combined.labs <- c('65+ years old (%)', 'Number structures in DSB 2',
                  'Number structures in DSB 1', 'Number structures in DSB 0', 'Structure footprint area', 'Home replacement value ($)',
                  'Year home built', 'Fire exposure 1910-2024 (%)', 'Pre-fire tree cover (%)')
 
 #Figure 4 Parcel and Neighborhood Scale Correlation plots
 #Panel showing the melted neighborhood level correlations
-fig4a <- ggplot(data = combined.melt |> filter(Var2 %in% c('Tpct.FA_65.and.over_yrs._C', 'zone_two_overlap_mean', 'zone_one_overlap_mean', 'zone_zero_overlap_mean', 
+fig4a <- ggplot(data = combined.melt |> filter(Var2 %in% c('Tpct.FA_65.and.over_yrs._C', 'zone_two_overlap_mean', 
+                                                           'zone_one_overlap_mean', 'zone_zero_overlap_mean', 
                                                           'structure.basal.area', 'structure_value_median', 
-                                                          'year.built.median',  'fire.area.1910to2023.pct', 'tree.cover.2022')), aes(x = Var1, y = Var2, fill = value)) +
+                                                          'year.built.median',  'fire.area.1910to2023.pct', 
+                                                          'tree.cover.2022')), aes(x = Var1, y = Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(midpoint = 0, mid ="grey70", 
                        limits = c(-0.5, +0.5), na.value = NA) +
@@ -671,13 +669,6 @@ pop.total.df <- data.frame(Var1 = c('Eaton', 'Palisades'), Var2 = c('pop.total',
 
 #Add the missing row
 combined.melt.fill <- combined.melt |> add_row(pop.total.df, .after = 2)
-
-# filter(Var2 %in% c('Tpct.FA_65.and.over_yrs._C', 'pop.total', 'Tpct.FA_Hispanic_C', 'Tpct.FA_whitep_C',
-#                    'Tpct.FA_AAp_C', 'Tpct.FA_Ap_C', 'Tpct.FA_renter_occ_C', 'ww_pct_bbg_noschooling_C', 
-#                    'ww_bbg_pct_highsch_C', 'ww_bbg_pct_associate_C', 'ww_bbg_pct_bachelor_C', 'ww_bbg_pct_graduate.Prof_C',
-#                    'ww_bbg_pct_belowpoverty_C', 'PercapitaInc', 'zone_two_overlap_mean', 'zone_one_overlap_mean', 'zone_zero_overlap_mean', 
-#                    'structure.basal.area', 'structure_value_median', 'after_2008_pct',
-#                    'year.built.median',  'fire.area.1910to2023.pct', 'tree.cover.2022')) 
 
 #Supplementary Figures
 #Neighborhood Scale
@@ -985,7 +976,7 @@ ps3h <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   ylab('Probability Home Destroyed (%)') + xlab('Urban Tree Cover (%)') +
   theme_bw() +
   guides(color = "none", linetype = "none") +
-  theme(legend.position = 'none', legend.direction = 'vertical',
+  theme(legend.position = 'inside', legend.position.inside = c(0.2, 0.28), legend.direction = 'vertical',
         axis.text.x = element_text(size = 12), axis.title.x = element_text(size = 14), 
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3h

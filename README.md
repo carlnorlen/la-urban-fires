@@ -12,7 +12,15 @@ repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine c
 All data in STATA .dta format used for modeling and table creation.
   *  stata_all_revised_data.dta
 
-Census Block scale urban morphology data processed for use in socio-economic analysis.
+US Census Block scale urban morphology data processed for use in socio-deomgraphic analysis. This file includes the following data fields: census block identifying information such as Block code (BLOCKCE20), 
+Census GEOID (GEOID20), Census urban/rural designation (UR20), fire name (which.fire), 2025 fire area (ha; fire.area.2025), 1910-2023 fire area (ha; fire.area.1910to2023), building footprint area (m^2/ha; building.area), 
+Number of structures in DSB Zone 0 (zone_zero_overlap_mean), Number of structures in DSB Zone 1 (zone_one_overlap_mean), Number of structures in DSB Zone 2 (zone_two_overlap_mean), median structure replacement value ($; structure_value_median),
+census block area (ha; block.area), 2025 proportion of census block burned (%; fire.area.2025.pct), 1910-2023 proportion of census block burned (%; fire.area.1910to2023.pct), "structure.basal.area"    
+[31] "destroy.count"            "major.damage.count"       "minor.damage.count"       "affected.count"           "no.damage.count"         
+[36] "structure.count"          "year.built.median"        "year.built.2008.count"    "property.value.median"    "destroy_pct"             
+[41] "major_damage_pct"         "minor_damage_pct"         "affected_pct"             "no_damage_pct"            "after_2008_pct"          
+[46] "tree.cover.2022"
+
   *  census_blocks_dins_destroyed_burned_area_20250424.csv
 
 Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg)
@@ -36,6 +44,7 @@ Data was derived from these publicly available sources:
   * Earth Define 2022 Urban Tree Cover: https://www.fs.usda.gov/detail/r5/communityforests/?cid=fseprd647385
   * 2020 Decennial and 2023 American Community Survey US Census Bureau Data: https://data.census.gov/advanced
   * CAL FIRE Structure Damage (DINS) and LA County Assessor's Data: https://data.lacounty.gov/datasets/lacounty::2025-parcels-with-dins-data/explore
+  * Landsat 9 surface reflectance for 1/14/2025 retrieved from Google Earth Engine: https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC09_C02_T1_L2#bands
 
 ## Code/Software
 The code shared with this submission were written in JavaScript for Google Earth Engine (GEE) and R 4.3.2 run using RStudio.
