@@ -15,7 +15,6 @@ options(tigris_use_cache = TRUE)
 #Data directory
 dir <- 'C://Users//cnorlen//mystuff//data//la-urban-fires//'
 
-
 #Load the FRAP data
 frap <- st_read(paste0(dir, 'fire23_1//fire23-1.shp'))
 
@@ -34,10 +33,8 @@ la.fires.buffer <- la.fires %>% st_buffer(dist = 100)
 #Load the block summary data
 block.summary <- read.csv(paste0(dir,'census_blocks_dins_destroyed_burned_area_20250424.csv'))
 
-# block.summary |> colnames()
-
 #Sociodemographic cencus block data
-socio.demo.block <- read.csv(paste0(dir, 'census_blocks_sample_sociodemographic_published_20260211.csv')) #20250502.csv'))
+socio.demo.block <- read.csv(paste0(dir, 'census_blocks_sample_sociodemographic_published_20260211.csv'))
 
 socio.demo.block |> colnames()
 socio.demo.block |> head()

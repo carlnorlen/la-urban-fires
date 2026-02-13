@@ -9,9 +9,6 @@ The code and data sets required to create figures, and tables are available as a
 repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also available through the Code Editor (https://code.earthengine.google.com/?accept_repo=users/cnorlen-usgs/la-urban-fire). 
 
 ## Description of the data and file structure
-All data in STATA .dta format used for modeling and table creation.
-  *  stata_all_revised_data.dta
-
 US Census Block scale urban morphology data processed for use in socio-deomgraphic analysis. This file includes the following data fields: census block identifying information such as Block code (BLOCKCE20), 
 Census GEOID (GEOID20), Census urban/rural designation (UR20), fire name (which.fire), 2025 fire area (ha; fire.area.2025), 1910-2023 fire area (ha; fire.area.1910to2023), building footprint area (m^2/ha; building.area), 
 Number of structures in DSB Zone 0 (zone_zero_overlap_mean), Number of structures in DSB Zone 1 (zone_one_overlap_mean), Number of structures in DSB Zone 2 (zone_two_overlap_mean), median structure replacement value ($; structure_value_median),
@@ -24,195 +21,93 @@ Homes with major damage % (major_damage_pct), Homes with minor damage % (minor_d
 US Census Block scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg). Contains the same data fields as above.
   *  la_fires_census_blocks_dins_destroyed_burned_area.gpkg
   
-Socio-economic US Census Block data used for figure creation. This file includes the same data fields as above along with the following primarily socio-demographic data fields: Categorical fire indicator (fire),
+Sociodemographic US Census Block and urban morphology data used for figure creation. This file includes the same data fields as above along with the following primarily socio-demographic data fields: Categorical fire indicator (fire),
 total census block population (Total.Popn), Fire affected proportion (FAP), Fire affected population (fire.affected_pop), Total number of males (X..Total...Male.), Number of fire affected males (Fireaffected_male),                                                                                             
 % of males that are fire affected (pct.FA_male), Total male % (Tpct.FA_male), Total number females (X..Total...Female.), Number of fire-affected females (Fire.affected.female), % of females who are fire affected (pct.Fireaffected_female),                                                                                       
 Total female % (Tpct.FA_female), Total population under 5 years (X..Total...Pop...Under.5.years), Fire affected population under 5 years (FA_under_5yrs.), % of fire affected 5 year olds (pct.FA_under_5yrs.), % of 5 year olds (Tpct.FA_under_5yrs),                                                                                            
 Total population between 5 to 19 years old (X..Total...Popn...5.to.19.years), Fire affected population between 5 to 19 years old (FA_5.19_yrs), % of fire affected 5 to 19 year olds (pct.FA_5.19_yrs), Total percentage of 5 to 19 year olds (Tpct.FA_5.19_yrs),                                                                                           
- [74] "X..Total...Popn...below.20years"                                                                               
- [75] "FA_below_20_yrs"                                                                                               
- [76] "pct.FA_below_20_yrs"                                                                                           
- [77] "Tpct.FA_below_20_yrs"                                                                                          
- [78] "X..Total...Popn...20.to.64.years"                                                                              
- [79] "FA_20.64_yrs."                                                                                                 
- [80] "Tpct.FA_20.64_yrs"                                                                                             
- [81] "X..Total...Popn...65.years.and.over"                                                                           
- [82] "FA_65.and.over_yrs."                                                                                           
- [83] "Tpct.FA_65.and.over_yrs."                                                                                      
- [84] "X..Total...Hispanic.or.Latino"                                                                                 
- [85] "FA_Hispanic"                                                                                                   
- [86] "Tpct.FA_Hispanic"                                                                                              
- [87] "X..Total...Not.Hispanic.or.Latino."                                                                            
- [88] "FA_not_Hispanic"                                                                                               
- [89] "Tpct.FA_not_Hispanic"                                                                                          
- [90] "X..Total...Population.of.one.race"                                                                             
- [91] "X..Total...Population.of.one.race...White.alone"                                                               
- [92] "FA_white"                                                                                                      
- [93] "Tpct.FA_white1"                                                                                                
- [94] "Tpct.FA_whitep"                                                                                                
- [95] "X..Total...Population.of.one.race...Black.or.African.American.alone"                                           
- [96] "FA_AA"                                                                                                         
- [97] "Tpct.FA_AA1"                                                                                                   
- [98] "Tpct.FA_AAp"                                                                                                   
- [99] "X..Total...Population.of.one.race...American.Indian.and.Alaska.Native.alone"                                   
-[100] "FA_AIAN"                                                                                                       
-[101] "Tpct.FA_AIAN1"                                                                                                 
-[102] "Tpct.FA_AIANp"                                                                                                 
-[103] "X..Total...Population.of.one.race...Asian.alone"                                                               
-[104] "FA_A"                                                                                                          
-[105] "Tpct.FA_A1"                                                                                                    
-[106] "Tpct.FA_Ap"                                                                                                    
-[107] "X..Total...Population.of.one.race...Native.Hawaiian.and.Other.Pacific.Islander.alone"                          
-[108] "FA_NHOPI"                                                                                                      
-[109] "Tpct.NHOPI1"                                                                                                   
-[110] "Tpct.NHOPIp"                                                                                                   
-[111] "white1"                                                                                                        
-[112] "whitep"                                                                                                        
-[113] "nonwhite1"                                                                                                     
-[114] "nonwhitep"                                                                                                     
-[116] "X..Total...Population.of.one.race...Some.Other.Race.alone"                                                     
-[117] "FA_otherrace"                                                                                                  
-[118] "Tpct.OR"                                                                                                       
-[119] "X..Total...Population.of.two.or.more.races."                                                                   
-[120] "FA_2.or.more_R"                                                                                                
-[121] "Tpct.2.or.more_R"                                                                                              
-[122] "X..Total...Population.of.two.or.more.races...Population.of.two.races."                                         
-[123] "FA_Two_R"                                                                                                      
-[124] "Tpct.2_R"                                                                                                      
-[125] "X..Total.Housing_units"                                                                                        
-[126] "FA_Housingunits"                                                                                               
-[127] "X..Total...Occupied"                                                                                           
-[128] "FA_occupied"                                                                                                   
-[129] "Tpct.FA_occ"                                                                                                   
-[130] "X..Total...Vacant"                                                                                             
-[131] "FA_vaccant"                                                                                                    
-[132] "Tpct.FA_vaccant"                                                                                               
-[133] "X..Total.0ccupied_housing_units"                                                                               
-[134] "X..Total...Owner.occupied."                                                                                    
-[135] "FA_owner_occ"                                                                                                  
-[136] "Tpct.FA_owner_occ"                                                                                             
-[137] "X..Total...Renter.occupied."                                                                                   
-[138] "FA_renter_occ"                                                                                                 
-[139] "Tpct.FA_renter_occ"                                                                                            
-[143] "Bpopulation"                                                                                                   
-[144] "BGPopulation"                                                                                                  
-[145] "popweights"                                                                                                    
-[146] "BGEstimate..Total.Pop..5.year.or.above."                                                                       
-[147] "BEstimate..Total.Pop..5.year.or.above."                                                                        
-[148] "BGEstimate..Total...Speak.only.English"                                                                        
-[149] "BlockEstimate..Total...Speak.only.English"                                                                     
-[150] "FA_BlockEstimate..Total...Speak.only.English"                                                                  
-[151] "ratio_FA_BlockEstimate..Total...Speak.only.English"                                                            
-[152] "Tpct_FA_Eng_speakers"                                                                                          
-[153] "BGEstimate..Total...Speak.other.languages."                                                                    
-[154] "BEstimate..Total...Speak.other.languages."                                                                     
-[155] "FA_BEstimate..Total...Speak.other.languages."                                                                  
-[156] "ratio_FA_BEstimate..Total...Speak.other.languages."                                                            
-[157] "Tpct_FA_Non.Eng_speakers"                                                                                      
-[158] "BGEstimate..Per.capita.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars."                      
-[159] "BGEstimate..Total.pop...Income.in.the.past.12.months.below.poverty.level."                                     
-[160] "BEstimate..Total.pop...Income.in.the.past.12.months.below.poverty.level."                                      
-[161] "FA_BEstimate..Total.pop...Income.in.the.past.12.months.below.poverty.level."                                   
-[162] "ratio_FA_BEstimate..Total.pop...Income.in.the.past.12.months.below.poverty.level."                             
-[163] "Tpct_FA_poverty"                                                                                               
-[164] "BGEstimate..Total..Pop.over.25"                                                                                
-[165] "BEstimate..Total..Pop.over.25"                                                                                 
-[166] "BGEstimate..Total...No.schooling.completed..no.formal.education"                                               
-[167] "BEstimate..Total...No.schooling.completed..no.formal.education"                                                
-[168] "FA_BEstimate..Total...No.schooling.completed..no.formal.education"                                             
-[169] "ratio_FA_B.no.formal.education"                                                                                
-[170] "Tpct_FA_B.no.formal.education"                                                                                 
-[171] "BGHighschool.OR.equivalent"                                                                                    
-[172] "BHighschool.OR.equivalent"                                                                                     
-[173] "FA_BHighschool.OR.equivalent"                                                                                  
-[174] "ratio_FA_BHighschool"                                                                                          
-[175] "Tpct_FA_BHighschool"                                                                                           
-[176] "BGEstimate..Total...Associate.s.degree"                                                                        
-[177] "BEstimate..Total...Associate.s.degree"                                                                         
-[178] "FA_BEstimate..Total...Associate.s.degree"                                                                      
-[179] "ratio_FA_BAssociate.s.degree"                                                                                  
-[180] "Tpct_FA_BAssociate.s.degree"                                                                                   
-[181] "BGEstimate..Total...Bachelor.s.degree"                                                                         
-[182] "BEstimate..Total...Bachelor.s.degree"                                                                          
-[183] "FA_BEstimate..Total...Bachelor.s.degree"                                                                       
-[184] "ratio_FA_BBachelor.s.degree"                                                                                   
-[185] "Tpct_FA_BBachelor.s.degree"                                                                                    
-[186] "BGgraduate.or.Professional.degree"                                                                             
-[187] "Bgraduate.or.Professional.degree"                                                                              
-[188] "FA_Bgraduate.or.Professional.degree"                                                                           
-[189] "ratio_FA_Bgraduate.or.Professional.degree"                                                                     
-[190] "Tpct_FA_Bgraduate.or.Professional.degree"                                                                      
-[193] "ww_pct_bbg_noschooling"                                                                                        
-[194] "ww_bbg_pct_highsch"                                                                                            
-[195] "ww_bbg_pct_associate"                                                                                          
-[196] "ww_pct.bbg.belowbachelors"                                                                                     
-[197] "ww_bbg_pct_bachelor"                                                                                           
-[198] "ww_bbg_pct_graduate.Prof"                                                                                      
-[199] "ww_pct.bbg_atand.above.bachelors"                                                                              
-[200] "ww_bbg_pct_belowpoverty"                                                                                       
-[201] "Estimate..Per.capita.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars..Block.Percapitaincome"  
-[202] "ww_bbg_pct_noneng"                                                                                             
-[203] "ww_bbg_pct_speak.eng"                                                                                          
-[204] "Pop_weight"                                                                                                    
-[205] "Estimate..Median.household.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars."                  
-[206] "PercapitaInc"                                                                                                  
-[208] "Income_b"                                                                                                      
-[209] "Estimate..Per.capita.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars..Block.Percapitaincome.1"
-[211] "Estimate..Total.Pop..5.year.or.above.blockgroup"                                                               
-[212] "Estimate..Total.Pop..5.year.or.above.block..Pop.weighted"                                                      
-[213] "Estimate..Total...Speak.only.English.Block.Group"                                                              
-[214] "Estimate..Total...Speak.only.English.Block.Pop.weighted"                                                       
-[215] "w_bbg_ratio_speak.eng"                                                                                         
-[216] "ww_bbg_ratio_speak.eng"                                                                                        
-[217] "ww_bbg_pct_speak.eng.1"                                                                                        
-[218] "Estimate..Total...Speak.other.languages.Block.Group"                                                           
-[219] "Estimate..Total...Speak.other.languages.Block.Population.weighted"                                             
-[220] "w_bbg_ratio_noneng"                                                                                            
-[221] "ww_bbg_ratio_noneng"                                                                                           
-[222] "ww_bbg_pct_noneng.1"                                                                                           
-[223] "Estimate..Median.household.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars..1"                
-[224] "Estimate..Per.capita.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars."                        
-[225] "Estimate..Per.capita.income.in.the.past.12.months..in.2023.inflation.adjusted.dollars..Block.Percapitaincome.2"
-[226] "Estimate..Total.pop...Income.in.the.past.12.months.below.poverty.level.Block.group"                            
-[227] "Estimate..Total.pop...Income.in.the.past.12.months.below.poverty.level.Pop.weighted.Block"                     
-[228] "w_bbg_ratio_belowpoverty"                                                                                      
-[229] "ww_bbg_ratio_belowpoverty"                                                                                     
-[230] "ww_bbg_pct_belowpoverty.1"                                                                                     
-[231] "Estimate..Total..Pop.over.25.Block.group"                                                                      
-[232] "Estimate..Total..Pop.over.25.Block.Pop.weighted"                                                               
-[233] "Estimate..Total...No.schooling.completed..no.formal.education.Block.Group"                                     
-[234] "Estimate..Total...No.schooling.completed..no.formal.education.Block.Pop.weighted"                              
-[235] "w_ratio_bbg_noschooling"                                                                                       
-[236] "ww_ratio_bbg_noschooling"                                                                                      
-[237] "ww_pct_bbg_noschooling.1"                                                                                      
-[238] "Estimate..Total...Regular.high.school.diploma.Block.group"                                                     
-[239] "Estimate..Total...Regular.high.school.diploma.Block"                                                           
-[240] "w_bbg_ratio__highsch"                                                                                          
-[241] "ww_bbg_ratio_highsch"                                                                                          
-[242] "ww_bbg_pct_highsch.1"                                                                                          
-[243] "Estimate..Total...Associate.s.degree.Block.Group"                                                              
-[244] "Estimate..Total...Associate.s.degree.Block"                                                                    
-[245] "w_bbg_ratio_associate"                                                                                         
-[246] "ww_bbg_ratio_associate"                                                                                        
-[247] "ww_bbg_pct_associate.1"                                                                                        
-[248] "Estimate..Total...Bachelor.s.degree.Block.Group"                                                               
-[249] "Estimate..Total...Bachelor.s.degree.popweighted.Block"                                                         
-[250] "w_bbg_ratio_bachelor"                                                                                          
-[251] "ww_bbg_ratio_bachelor"                                                                                         
-[252] "ww_bbg_pct_bachelor.1"                                                                                         
-[253] "Graduate.or.Professional.degree.Block.Level"                                                                   
-[254] "Graduate.or.Professional.degree.Block.Pop.weighted"                                                            
-[255] "w_ratio_bbg_graduate.Prof"                                                                                     
-[256] "ww_bbg_ratio_graduate.Prof"                                                                                    
-[257] "ww_bbg_pct_graduate.Prof.1"                                                                                    
-                 
+Total population below 20 years (X..Total...Popn...below.20years), Fire affected population between 20 years (FA_below_20_yrs), % of fire affected below 20 years (pct.FA_below_20_yrs), % of below 20 year olds (Tpct.FA_below_20_yrs), 
+total population 20 to 64 years (X..Total...Popn...20.to.64.years), fire affected 20 to 64 year olds (FA_20.64_yrs.), % 20 to 64 year olds (Tpct.FA_20.64_yr), total population 65 years and over (X..Total...Popn...65.years.and.over), 
+fire affected population 65 years and over (FA_65.and.over_yrs.),  % 65 years and over (Tpct.FA_65.and.over_yrs.), total Hispanic or Lation population (X..Total...Hispanic.or.Latino), fire affected Hispanic/Latino population (FA_Hispanic), 
+% Hispanic/Latino (Tpct.FA_Hispanic), total White population (X..Total...Population.of.one.race...White.alone), fire affected White population (FA_white), % White (Tpct.FA_whitep), total Black / African American population (X..Total...Population.of.one.race...Black.or.African.American.alone),
+fire affected Black / African American population (FA_AA), % Black / African American (Tpct.FA_AAp), total population American Indian / Alaska Native (X..Total...Population.of.one.race...American.Indian.and.Alaska.Native.alone), 
+fire affected population American Indian / Alaska Native (FA_AIAN), % American Indian / Alaska Native (Tpct.FA_AIANp), Total population Asian (X..Total...Population.of.one.race...Asian.alone), fire affected population Asian (FA_A), 
+% Asian (Tpct.FA_Ap), total population Native Hawaiian / Other Pacific Islander (X..Total...Population.of.one.race...Native.Hawaiian.and.Other.Pacific.Islander.alone), fire affected population Native Hawaiian / Other Pacific Islander (FA_NHOPI),
+% Native Hawaiian / Other Pacific Islander (Tpct.NHOPIp), total population other race (X..Total...Population.of.one.race...Some.Other.Race.alone), fire affected population other race (FA_otherrace), % other race (Tpct.OR), total housing units (X..Total.Housing_units), 
+fire affected housing units (FA_Housingunits), total occupied housing units (X..Total...Occupied), fire affected occupied housing units (FA_occupied), % occupied housing units (Tpct.FA_occ), total vaccant housing units (X..Total...Vacant),
+fire affected vaccant housing units (FA_vaccant), % vaccant housing units (Tpct.FA_vaccant), total occupied housing units (X..Total.0ccupied_housing_units), total owner occupied housing units (X..Total...Owner.occupied.), 
+fire affected owner occupied housing units (FA_owner_occ), % owner occupied housing units (Tpct.FA_owner_occ), total renter occupied housing units (X..Total...Renter.occupied.), fire affected renter occupied housing units (FA_renter_occ),
+% renter occupied housing units (Tpct.FA_renter_occ), Block population (Bpopulation), fire affected population speaking only English (FA_BlockEstimate..Total...Speak.only.English), % English speakers (Tpct_FA_Eng_speakers), fire affected population of non-English speakers (FA_BEstimate..Total...Speak.other.languages.),
+% Non-English Speakers (Tpct_FA_Non.Eng_speakers), fire affected population below poverty level (FA_BEstimate..Total.pop...Income.in.the.past.12.months.below.poverty.level.), % below poverty level (Tpct_FA_poverty), fire affected population with no formal education (FA_BEstimate..Total...No.schooling.completed..no.formal.education),
+% no formal education (Tpct_FA_B.no.formal.education), fire affected population with high school or equivalent (FA_BHighschool.OR.equivalent), % high school or equivalent (Tpct_FA_BHighschool), fire affected population with Associate's Degree (FA_BEstimate..Total...Associate.s.degree),
+% Associate's Degree (Tpct_FA_BAssociate.s.degree), fire affected population with Bachelor's Degree (FA_BEstimate..Total...Bachelor.s.degree), % Bachelor's Degree (Tpct_FA_BBachelor.s.degree), fire affected population with graduate or professional degree (FA_Bgraduate.or.Professional.degree),
+% Graduate of Professional Degree (Tpct_FA_Bgraduate.or.Professional.degree), % No Schooling weighted by block group (ww_pct_bbg_noschooling), % high school weighted by block group (ww_bbg_pct_highsch), % Associate's Degree (weighted by block groupww_bbg_pct_associate),                                                                                          
+% Below Bachelor's Degree weighted by block group (ww_pct.bbg.belowbachelors), % Bachelor's Degree weighted by block group (ww_bbg_pct_bachelor), % Graduate or Professional degree weighted by block group (ww_bbg_pct_graduate.Prof),                                                                                       
+% Above Bachelor's Degree weighted by block group (ww_pct.bbg_atand.above.bachelors), % Below poverty weighted by block group (ww_bbg_pct_belowpoverty), % non-English speakers weighted by block group (ww_bbg_pct_noneng), % English speakers weighted by block group (ww_bbg_pct_speak.eng),
+Per Capita Income (PercapitaInc)
   *  census_blocks_sample_sociodemographic_20250502.csv
+
+Parcel scale data on fire impacts and urban morphology characteristics as a CSV (.CSV). This data file contains the following data fields: LA County Assessor's Identification Number (AIN_1), Address number (SitusHouseNo), Property use (UseType), Description of building use (UseDescription), 
+Street Name (SitusStreet), Street number and name (SitusAddress), City (SitusCity)                "SitusZIP"                
+ # [11] "SitusFullAddress"
+ [21] "DesignType1"              "YearBuilt1"               "EffectiveYear1"           "Units1"                   "Bedrooms1"               
+ [26] "Bathrooms1"               "SQFTmain1"                "DesignType2"              "YearBuilt2"               "EffectiveYear2"          
+ [31] "Units2"                   "Bedrooms2"                "Bathrooms2"               "SQFTmain2"                "DesignType3"             
+ [36] "YearBuilt3"               "EffectiveYear3"           "Units3"                   "Bedrooms3"                "Bathrooms3"              
+ [41] "SQFTmain3"                "DesignType4"              "YearBuilt4"               "EffectiveYear4"           "Units4"                  
+ [46] "Bedrooms4"                "Bathrooms4"               "SQFTmain4"                "DesignType5"              "YearBuilt5"              
+ [51] "EffectiveYear5"           "Units5"                   "Bedrooms5"                "Bathrooms5"               "SQFTmain5"               
+ [56] "RecDate"                  "RecDocNo"                 "Roll_Year"                "Roll_LandValue"           "Roll_ImpValue"           
+ [61] "Roll_PersPropValue"       "Roll_FixtureValue"        "Roll_HomeOwnersExemp"     "Roll_RealEstateExemp"     "Roll_PersPropExemp"      
+ [66] "Roll_FixtureExemp"        "Roll_LandBaseYear"        "Roll_ImpBaseYear"         "LastSaleDate"             "LastSaleAmount"          
+ [71] "QualityClass1"            "QualityClass2"            "QualityClass3"            "QualityClass4"            "QualityClass5"           
+ [76] "LegalDescLine1"           "LegalDescLine2"           "LegalDescLine3"           "LegalDescLine4"           "LegalDescLine5"          
+ [81] "LegalDescLineLast"        "LegalDescription"         "SpatialChangeDate"        "ParcelCreateDate"         "ParcelTypeCode"          
+ [86] "Assr_Map"                 "Assr_Index_Map"           "CENTER_LAT"               "CENTER_LON"               "CENTER_X"                
+ [91] "CENTER_Y"                 "LAT_LON"                  "Fire_Name"                "DAMAGE_1"                 "STRUCTURECATEGORY"       
+ [96] "Total_Units"              "GlobalID"                 "Tot_SqFt"                 "DINS_Count"               "LCITY"                   
+[101] "COMMUNITY"                "PARCEL_ID"                "STATE_CODE"               "CNTY_CODE"                "APN2"                    
+[106] "ADDR"                     "CITY"                     "STATE"                    "ZIP"                      "PLUS"                    
+[111] "STD_ADDR"                 "STD_CITY"                 "STD_STATE"                "STD_ZIP"                  "STD_PLUS"                
+[116] "TYPE_CODE"                "LONGITUDE"                "LATITUDE"                 "FIPS_CODE"                "UNFRM_APN"               
+[121] "APN_SEQ_NO"               "FRM_APN"                  "ORIG_APN"                 "ACCT_NO"                  "TH_BRO_MAP"              
+[126] "MAP_REF1"                 "MAP_REF2"                 "CENSUS_TR"                "BLOCK_NBR"                "LOT_NBR"                 
+[131] "RANGE"                    "TOWNSHIP"                 "SECTION"                  "QRT_SECT"                 "LAND_USE"                
+[136] "M_HOME_IND"               "ZONING"                   "PROP_IND"                 "SUB_TR_NUM"               "SUB_PLT_BK"              
+[141] "SUB_PLT_PG"               "SUB_NAME"                 "OWN_CP_IND"               "OWN1_LAST"                "OWN1_FRST"               
+[146] "OWN2_LAST"                "OWN2_FRST"                "MAIL_NBRPX"               "MAIL_NBR"                 "MAIL_NBR2"               
+[151] "MAIL_NBRSX"               "MAIL_DIR"                 "MAIL_STR"                 "MAIL_MODE"                "MAIL_QDRT"               
+[156] "MAIL_UNIT"                "MAIL_CITY"                "MAIL_STATE"               "MAIL_ZIP"                 "MAIL_CC"                 
+[161] "MAIL_OPT"                 "TOT_VAL"                  "LAN_VAL"                  "TOT_VAL_CD"               "LAN_VAL_CD"              
+[166] "ASSD_VAL"                 "ASSD_LAN"                 "MKT_VAL"                  "MKT_LAN"                  "APPR_VAL"                
+[171] "APPR_LAN"                 "TAX_AMT"                  "TAX_YR"                   "ASSD_YR"                  "TAX_AREA"                
+[176] "DOC_NBR"                  "SALE_BK_PG"               "FRONT_FT"                 "DEPTH_FT"                 "LAND_ACRES"              
+[181] "LAND_SQ_FT"               "LOT_AREA"                 "YR_BLT"                   "EFF_YR_BLT"               "LEGAL1"                  
+[186] "LEGAL2"                   "LEGAL3"                   "fd_id"                    "bid"                      "cbfips"                  
+[191] "st_damcat"                "occtype"                  "bldgtype"                 "num_story"                "sqft"                    
+[196] "found_type"               "found_ht"                 "med_yr_blt"               "val_struct"               "val_cont"                
+[201] "val_vehic"                "ftprntid"                 "ftprntsrc"                "source"                   "students"                
+[206] "pop2amu65"                "pop2amo65"                "pop2pmu65"                "pop2pmo65"                "o65disable"              
+[211] "u65disable"               "x"                        "y"                        "firmzone"                 "grnd_elv_m"              
+[216] "ground_elv"               "id"                       "cptr_d_"                  "footprint.acre"           "footprint.sqft"          
+[221] "release"                  "zone_one_overlap"         "zone_two_overlap"         "zone_zero_overlap"        "zone_one_overlap_correct"
+[226] "zone_two_overlap_correct" "over.65.pct"              "under.65.pct"             "pop.total"                "building.area"           
+[231] "parcel.area"              "structure.basal.area"     "race"                     "tree.cover.2022"          "fire.exposed.1910to2023" 
+[236] "race.num"                 "DAMAGE_1.num"
+# "APN_1"
+ #  [6] "SitusUnit"                         "TaxRateArea"              "TaxRateCity"              "AgencyClassNo"            "AgencyName"              
+ # [16] "AgencyType"               "UseCode"                  "UseCode_2" 
+ # "SitusFraction"            "SitusDirection"         
+  *  combined_la_fires_parcel_all_structures_data_20250414_v2.csv
 
 Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg)
   *  combined_la_fires_parcel_all_structures_data.gpkg
 
-Parcel scale data on fire impacts and urban morphology characteristics as a CSV (.CSV)
-  *  combined_la_fires_parcel_all_structures_data_20250414_v2.csv
+All data in STATA .dta format used for modeling and table creation.
+  *  stata_all_revised_data.dta
+
+Cropped Landsat 9 image used for creation of Main Text figure 1 in GeoTiff format (.tif)
+  *  Landsat_Image_20250114_reproject.tif
 
 ## Sharing/Access information
 Data was derived from these publicly available sources:
