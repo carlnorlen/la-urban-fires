@@ -179,7 +179,7 @@ combined.block.sf <- block.dins.sf |> filter(UR20 == 'U'& !is.na(structure.count
 
 #Add the parcel level data
 #Add the last name ethnicity fields to the large data tables
-all.join <- st_read(paste0(dir,'combined_la_fires_parcel_all_structures_data.gpkg'))
+all.join <- st_read(paste0(dir,'combined_la_fires_parcel_all_structures_data_published.gpkg'))
 
 #Add a binary damage layer
 all.join <- all.join |> mutate(damage.binary = case_when(DAMAGE_1 == 'Destroyed (>50%)' ~ 1, DAMAGE_1 == 'Inaccessible' ~ NA, DAMAGE_1 %in% c('Major (26-50%)', 'Minor (10-25%)', 'Affected (1-9%)', 'No Damage') ~ 0))

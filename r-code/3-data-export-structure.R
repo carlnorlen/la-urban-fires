@@ -133,10 +133,17 @@ all.join.export <- all.join.ethnicity.tree |>
 all.join.export <- all.join.export |> mutate(race.num = case_when(race == 'black' ~ 1, race == 'hispanic' ~ 2, race == 'white' ~ 3, race == 'asian' ~ 4, is.na(race) ~ NA))
 
 #Create numeric damage categories
-all.join.export <- all.join.export |> mutate(DAMAGE_1.num = case_when(DAMAGE_1 == 'No Damage' ~ 1, DAMAGE_1 == 'Affected (1-9%)' ~ 2, DAMAGE_1 == 'Minor (10-25%)' ~ 3, DAMAGE_1 == 'Major (26-50%)' ~ 4, DAMAGE_1 == 'Destroyed (>50%)' ~ 5, DAMAGE_1 == 'Inaccessible' ~ NA))
+all.join.export <- all.join.export |> mutate(DAMAGE_1.num = case_when(DAMAGE_1 == 'No Damage' ~ 1, DAMAGE_1 == 'Affected (1-9%)' ~ 2, DAMAGE_1 == 'Minor (10-25%)' ~ 3, 
+                                                                      DAMAGE_1 == 'Major (26-50%)' ~ 4, DAMAGE_1 == 'Destroyed (>50%)' ~ 5, DAMAGE_1 == 'Inaccessible' ~ NA)) |>
+                                      #Select data fields for exporting
+                                      select('AIN_1', 'SitusHouseNo', 'UseType', 'UseDescription', 
+                                             'SitusStreet', 'SitusAddress', 'SitusCity', 'SitusZIP', 'YearBuilt1', 'Units1', 'Bedrooms1', 'Bathrooms1', 'SQFTmain1', 'Roll_Year',
+                                             'Roll_LandValue', 'Roll_ImpValue', 'LegalDescription', 'Fire_Name', 'DAMAGE_1', 'STRUCTURECATEGORY', 'OWN1_LAST', 'OWN1_FRST', 'OWN2_LAST', 'OWN2_FRST', 'val_struct', 
+                                             'zone_zero_overlap', 'zone_one_overlap_correct', 'zone_two_overlap_correct', 'over.65.pct', 'under.65.pct', 'pop.total', 'parcel.area', 'structure.basal.area', 
+                                             'race', 'tree.cover.2022', 'fire.exposed.1910to2023', 'race.num','DAMAGE_1.num', 'geom')
 
-#Add the last name ethnicity fields to the large data tables
-st_write(all.join.export, paste0(dir,'combined_la_fires_parcel_all_structures_data.gpkg'), delete_layer = TRUE)
+#Save the parcel data as a geopackage (.gpkg)
+st_write(all.join.export, paste0(dir,'combined_la_fires_parcel_all_structures_data_published.gpkg'), delete_layer = TRUE)
 
-#Save the data as a CSV file
-write.csv(all.join.export |> as.data.frame() |> select(-c('SHAPE', 'geom')), paste0(dir,'combined_la_fires_parcel_all_structures_data_20250414_v2.csv'), row.names = FALSE)
+#Save the parcel data as a CSV file (.CSV)
+write.csv(all.join.export |> as.data.frame() |> select(-c('geom')), paste0(dir,'combined_la_fires_parcel_all_structures_data_published_20260212.csv'), row.names = FALSE)

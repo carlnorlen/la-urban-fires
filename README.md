@@ -45,65 +45,20 @@ fire affected owner occupied housing units (FA_owner_occ), % owner occupied hous
 % Below Bachelor's Degree weighted by block group (ww_pct.bbg.belowbachelors), % Bachelor's Degree weighted by block group (ww_bbg_pct_bachelor), % Graduate or Professional degree weighted by block group (ww_bbg_pct_graduate.Prof),                                                                                       
 % Above Bachelor's Degree weighted by block group (ww_pct.bbg_atand.above.bachelors), % Below poverty weighted by block group (ww_bbg_pct_belowpoverty), % non-English speakers weighted by block group (ww_bbg_pct_noneng), % English speakers weighted by block group (ww_bbg_pct_speak.eng),
 Per Capita Income (PercapitaInc)
-  *  census_blocks_sample_sociodemographic_20250502.csv
+  *  census_blocks_sample_sociodemographic_published_20260211.csv
 
 Parcel scale data on fire impacts and urban morphology characteristics as a CSV (.CSV). This data file contains the following data fields: LA County Assessor's Identification Number (AIN_1), Address number (SitusHouseNo), Property use (UseType), Description of building use (UseDescription), 
-Street Name (SitusStreet), Street number and name (SitusAddress), City (SitusCity)                "SitusZIP"                
- # [11] "SitusFullAddress"
- [21] "DesignType1"              "YearBuilt1"               "EffectiveYear1"           "Units1"                   "Bedrooms1"               
- [26] "Bathrooms1"               "SQFTmain1"                "DesignType2"              "YearBuilt2"               "EffectiveYear2"          
- [31] "Units2"                   "Bedrooms2"                "Bathrooms2"               "SQFTmain2"                "DesignType3"             
- [36] "YearBuilt3"               "EffectiveYear3"           "Units3"                   "Bedrooms3"                "Bathrooms3"              
- [41] "SQFTmain3"                "DesignType4"              "YearBuilt4"               "EffectiveYear4"           "Units4"                  
- [46] "Bedrooms4"                "Bathrooms4"               "SQFTmain4"                "DesignType5"              "YearBuilt5"              
- [51] "EffectiveYear5"           "Units5"                   "Bedrooms5"                "Bathrooms5"               "SQFTmain5"               
- [56] "RecDate"                  "RecDocNo"                 "Roll_Year"                "Roll_LandValue"           "Roll_ImpValue"           
- [61] "Roll_PersPropValue"       "Roll_FixtureValue"        "Roll_HomeOwnersExemp"     "Roll_RealEstateExemp"     "Roll_PersPropExemp"      
- [66] "Roll_FixtureExemp"        "Roll_LandBaseYear"        "Roll_ImpBaseYear"         "LastSaleDate"             "LastSaleAmount"          
- [71] "QualityClass1"            "QualityClass2"            "QualityClass3"            "QualityClass4"            "QualityClass5"           
- [76] "LegalDescLine1"           "LegalDescLine2"           "LegalDescLine3"           "LegalDescLine4"           "LegalDescLine5"          
- [81] "LegalDescLineLast"        "LegalDescription"         "SpatialChangeDate"        "ParcelCreateDate"         "ParcelTypeCode"          
- [86] "Assr_Map"                 "Assr_Index_Map"           "CENTER_LAT"               "CENTER_LON"               "CENTER_X"                
- [91] "CENTER_Y"                 "LAT_LON"                  "Fire_Name"                "DAMAGE_1"                 "STRUCTURECATEGORY"       
- [96] "Total_Units"              "GlobalID"                 "Tot_SqFt"                 "DINS_Count"               "LCITY"                   
-[101] "COMMUNITY"                "PARCEL_ID"                "STATE_CODE"               "CNTY_CODE"                "APN2"                    
-[106] "ADDR"                     "CITY"                     "STATE"                    "ZIP"                      "PLUS"                    
-[111] "STD_ADDR"                 "STD_CITY"                 "STD_STATE"                "STD_ZIP"                  "STD_PLUS"                
-[116] "TYPE_CODE"                "LONGITUDE"                "LATITUDE"                 "FIPS_CODE"                "UNFRM_APN"               
-[121] "APN_SEQ_NO"               "FRM_APN"                  "ORIG_APN"                 "ACCT_NO"                  "TH_BRO_MAP"              
-[126] "MAP_REF1"                 "MAP_REF2"                 "CENSUS_TR"                "BLOCK_NBR"                "LOT_NBR"                 
-[131] "RANGE"                    "TOWNSHIP"                 "SECTION"                  "QRT_SECT"                 "LAND_USE"                
-[136] "M_HOME_IND"               "ZONING"                   "PROP_IND"                 "SUB_TR_NUM"               "SUB_PLT_BK"              
-[141] "SUB_PLT_PG"               "SUB_NAME"                 "OWN_CP_IND"               "OWN1_LAST"                "OWN1_FRST"               
-[146] "OWN2_LAST"                "OWN2_FRST"                "MAIL_NBRPX"               "MAIL_NBR"                 "MAIL_NBR2"               
-[151] "MAIL_NBRSX"               "MAIL_DIR"                 "MAIL_STR"                 "MAIL_MODE"                "MAIL_QDRT"               
-[156] "MAIL_UNIT"                "MAIL_CITY"                "MAIL_STATE"               "MAIL_ZIP"                 "MAIL_CC"                 
-[161] "MAIL_OPT"                 "TOT_VAL"                  "LAN_VAL"                  "TOT_VAL_CD"               "LAN_VAL_CD"              
-[166] "ASSD_VAL"                 "ASSD_LAN"                 "MKT_VAL"                  "MKT_LAN"                  "APPR_VAL"                
-[171] "APPR_LAN"                 "TAX_AMT"                  "TAX_YR"                   "ASSD_YR"                  "TAX_AREA"                
-[176] "DOC_NBR"                  "SALE_BK_PG"               "FRONT_FT"                 "DEPTH_FT"                 "LAND_ACRES"              
-[181] "LAND_SQ_FT"               "LOT_AREA"                 "YR_BLT"                   "EFF_YR_BLT"               "LEGAL1"                  
-[186] "LEGAL2"                   "LEGAL3"                   "fd_id"                    "bid"                      "cbfips"                  
-[191] "st_damcat"                "occtype"                  "bldgtype"                 "num_story"                "sqft"                    
-[196] "found_type"               "found_ht"                 "med_yr_blt"               "val_struct"               "val_cont"                
-[201] "val_vehic"                "ftprntid"                 "ftprntsrc"                "source"                   "students"                
-[206] "pop2amu65"                "pop2amo65"                "pop2pmu65"                "pop2pmo65"                "o65disable"              
-[211] "u65disable"               "x"                        "y"                        "firmzone"                 "grnd_elv_m"              
-[216] "ground_elv"               "id"                       "cptr_d_"                  "footprint.acre"           "footprint.sqft"          
-[221] "release"                  "zone_one_overlap"         "zone_two_overlap"         "zone_zero_overlap"        "zone_one_overlap_correct"
-[226] "zone_two_overlap_correct" "over.65.pct"              "under.65.pct"             "pop.total"                "building.area"           
-[231] "parcel.area"              "structure.basal.area"     "race"                     "tree.cover.2022"          "fire.exposed.1910to2023" 
-[236] "race.num"                 "DAMAGE_1.num"
-# "APN_1"
- #  [6] "SitusUnit"                         "TaxRateArea"              "TaxRateCity"              "AgencyClassNo"            "AgencyName"              
- # [16] "AgencyType"               "UseCode"                  "UseCode_2" 
- # "SitusFraction"            "SitusDirection"         
-  *  combined_la_fires_parcel_all_structures_data_20250414_v2.csv
+Street Name (SitusStreet), Street number and name (SitusAddress), City (SitusCity), Zip Code (SitusZIP), Year structure built (YearBuilt1), Number of units (Units1), Number of bedrooms (Bedrooms1), Number of bathrooms (Bathrooms1), Building square feet (SQFTmain1), Property tax assessment year (Roll_Year),
+Property tax land value (Roll_LandValue), Property tax improvement value (Roll_ImpValue), Property legal description (LegalDescription), Name of 2025 fire parcel intersects (Fire_Name), CAL FIRE DINS fire damage class (DAMAGE_1)
+CAL FIRE DINS type of structure (STRUCTURECATEGORY), First owner last name (OWN1_LAST), First owner first name (OWN1_FRST), Second owner last name (OWN2_LAST), Second owner first name (OWN2_FRST), USACE structure replacement value (val_struct), Number of structures in Defensible Space Buffer (DSB) Zone 0 (zone_zero_overlap)
+Number of structures in DSB Zone 1 (zone_one_overlap_correct), Number of structures in DSB Zone 2 (zone_two_overlap_correct), % of people over 65 (over.65.pct), % of people under 65 (under.65.pct), total population (pop.total), Parcel area (ha; parcel.area), Structure footprint area (m^2; structure.basal.area), Predicted property owner race (race),
+2022 % tree cover (tree.cover.2022), Categorical exposure to fire from 1910 to 2023 (fire.exposed.1910to2023), Categorical predicted property owner race (race.num), Categorical CAL FIRE DINS fire damage (DAMAGE_1.num)        
+  *  combined_la_fires_parcel_all_structures_data_published_20260212.csv
 
-Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg)
+Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg) with the same data fields as the above CSV as well as the parcel geometry (geom).
   *  combined_la_fires_parcel_all_structures_data.gpkg
 
-All data in STATA .dta format used for modeling and table creation.
+All data in STATA .dta format used for modeling and table creation. Includes the same data fields as the above US Census block and parcel scale data.
   *  stata_all_revised_data.dta
 
 Cropped Landsat 9 image used for creation of Main Text figure 1 in GeoTiff format (.tif)
