@@ -1,4 +1,5 @@
-****URban Fire Project***
+****Urban Fire Project***
+ ** Code for Neighborhood-scale analysis using STATA**
  ** Applying the Analytic weights [aw]: standard for survey based regression**
  [aw = fireaffected_pop]
  
@@ -181,40 +182,24 @@ summarize POP20 fireaffected_pop blockarea firearea2025pct destroy_pct firearea1
 
 *** REGRESSION RESULTS ***
 **EATON FIRE**
-regress z_destroy_pct z_structure_value_median z_zone_zero_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C z_TpctFA_65andover_yrs_C z_TpctFA_AAp_C z_Tpct_FA_Eng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BBachelorsdegree_C z_Tpct_FA_poverty_C z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 1 [aw = fireaffected_pop ],robust
+regress z_destroy_pct z_structure_value_median z_zone_zero_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C z_TpctFA_65andover_yrs_C z_TpctFA_AAp_C z_Tpct_FA_NonEng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BBachelorsdegree_C z_Tpct_FA_poverty_C z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 1 [aw = fireaffected_pop ],robust
 
 estat ic
 vif
 
 
-glm z_destroy_pct z_structure_value_median z_zone_zero_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C z_TpctFA_65andover_yrs_C z_TpctFA_AAp_C z_Tpct_FA_Eng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BBachelorsdegree_C z_Tpct_FA_poverty_C z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 1 [aw = fireaffected_pop ]
+glm z_destroy_pct z_structure_value_median z_zone_zero_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C z_TpctFA_65andover_yrs_C z_TpctFA_AAp_C z_Tpct_FA_NonEng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BBachelorsdegree_C z_Tpct_FA_poverty_C z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 1 [aw = fireaffected_pop ]
 
 ***PALISADES FIRE**
 
 
-regress z_destroy_pct z_structure_value_median z_zone_one_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C TpctFA_65andover_yrs_C z_TpctFA_2064_yrs_C z_TpctFA_whitep_CC z_Tpct_FA_Eng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BHighschool_CC z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 0 [aw = fireaffected_pop ],robust
+regress z_destroy_pct z_structure_value_median z_zone_one_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C TpctFA_65andover_yrs_C z_TpctFA_2064_yrs_C z_TpctFA_whitep_CC z_Tpct_FA_NonEng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BHighschool_CC z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 0 [aw = fireaffected_pop ],robust
 
 
 estat ic
 vif
 
 
-glm z_destroy_pct z_structure_value_median z_zone_one_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C TpctFA_65andover_yrs_C z_TpctFA_2064_yrs_C z_TpctFA_whitep_CC z_Tpct_FA_Eng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BHighschool_CC z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 0 [aw = fireaffected_pop ]
+glm z_destroy_pct z_structure_value_median z_zone_one_overlap_mean z_firearea1910to2023pct z_structurebasalarea z_yearbuiltmedian z_treecover2022 z_TpctFA_vaccant_C z_TpctFA_renter_occ_C z_TpctFA_Hispanic_C TpctFA_65andover_yrs_C z_TpctFA_2064_yrs_C z_TpctFA_whitep_CC z_Tpct_FA_NonEng_speakers_C z_Tpct_FA_BAssociatesdegree_C z_Tpct_FA_BHighschool_CC z_post_2008_pct z_BGEstimatePercapitaincomein if  UR20 =="U" & fire == 0 [aw = fireaffected_pop ]
 
 
-
-
-******PArcel level data***** MAy 1st****
-
- summarize YearBuilt1 val_struct zone_zero_overlap zone_one_overlap_correct zone_two_overlap_correct over65pct poptotal structurebasalarea treecover2022 if Fire_Name == "Eaton"
-	 
-	  summarize YearBuilt1 val_struct zone_zero_overlap zone_one_overlap_correct zone_two_overlap_correct over65pct poptotal structurebasalarea treecover2022 if Fire_Name == "Palisades"
-	  
-	  logit Destroy_Bin z_YearBuilt1 z_val_struct z_zone_zero_overlap z_zone_one_overlap_correct z_zone_two_overlap_correct z_over65pct z_poptotal z_structurebasalarea z_treecover2022 fireexposed1910to2023 single_res if Fire_Name == "Eaton"
-
-	  estat ic 
-
-logit Destroy_Bin z_YearBuilt1 z_val_struct z_zone_zero_overlap z_zone_one_overlap_correct z_zone_two_overlap_correct z_over65pct z_poptotal z_structurebasalarea z_treecover2022 fireexposed1910to2023 single_res if Fire_Name == "Palisades"
-
-	 estat ic
-	 

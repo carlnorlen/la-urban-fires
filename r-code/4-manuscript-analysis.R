@@ -1,12 +1,11 @@
 #Purpose: Analysis the parcel and neighborhood scale impacts of the 2025 LA Urban Fres 
 #Created by: Carl A. Norlen
 #Created date: 02/10/2025
-#Updated date: 02/10/2026
+#Updated date: 02/18/2026
 
 #Packages for analysis
-my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 'osmdata', 'rethnicity', 'viridis', 'terra', 'reshape2', 'tidyterra', 'RStoolbox', 'RColorBrewer')
-# library('RColorBrewer')
-# install.packages(c('tigris', 'stringr', 'corrplot'))
+my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 
+                 'osmdata', 'rethnicity', 'viridis', 'terra', 'reshape2', 'tidyterra', 'RStoolbox', 'RColorBrewer')
 
 #Load the packages
 lapply(my_packages, require, character.only = TRUE)
@@ -772,10 +771,9 @@ fs1b <- all.join %>%
   as.data.frame() %>%
   group_by(STRUCTURECATEGORY, Fire_Name) %>% 
   summarize(count = n()) %>% 
-  ggplot(aes(x=STRUCTURECATEGORY, y = count)) + #, fill= factor(DAMAGE_1, levels = c('Destroyed (>50%)',  'Major (26-50%)', 'Minor (10-25%)', 'Affected (1-9%)', 'No Damage')))) + 
+  ggplot(aes(x=STRUCTURECATEGORY, y = count)) + 
   geom_bar(stat="identity") +
   facet_grid(~Fire_Name, scales = "free_x", space = "free_x") +
-  # scale_fill_brewer(breaks = c('Destroyed (>50%)',  'Major (26-50%)', 'Minor (10-25%)', 'Affected (1-9%)', 'No Damage'), type = 'seq', palette = 7, name = 'Fire Impact', direction = -1) +
   xlab('Structure Category') + ylab('Number of Structures') 
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90))
@@ -787,7 +785,7 @@ fs1
 #Save the figure
 ggsave('FigS1_damage_by_structure_category.png',
        plot = fs1,
-       path = 'C://Users//CarlNorlen//mystuff//la-urban-fires//figures',
+       path = 'C://Users//cnorlen//mystuff//la-urban-fires//figures',
        scale = 1,
        width = 14,
        height = 16,
@@ -805,7 +803,6 @@ fs2 <- all.join %>%
   ggplot(aes(x=race, y = count)) + 
   geom_bar(stat="identity") +
   facet_grid(~Fire_Name, scales = "free_x", space = "free_x") +
-  # scale_fill_brewer(breaks = c('Destroyed (>50%)',  'Major (26-50%)', 'Minor (10-25%)', 'Affected (1-9%)', 'No Damage'), type = 'seq', palette = 7, name = 'Fire Impact', direction = -1) +
   xlab('Race of Property Owner') + ylab('Count') +
   theme_bw()
 fs2
