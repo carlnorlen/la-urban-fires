@@ -2,10 +2,10 @@
 ---
 
 These data sets and scripts allow for the creation of all figures and supplementary figures and tables in the following manuscript. When using these data and script please cite the following manuscript.
-Norlen, C.A.; Sharma, S.; Escobedo, F.J. (in review) "Socio-Ecological Impacts of the 2025 Los Angeles Urban Fires on Communities, Neighborhoods, and Homes" Nature Communications
+Norlen, C.A.; Sharma, S.; Escobedo, F.J. (2026) "Socio-Ecological Impacts of the 2025 Los Angeles Urban Fires on Communities, Neighborhoods, and Homes" Nature Communications
 
 ## Data Access
-The code and data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available as a github 
+The code and data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available in the following GitHub 
 repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also available through the Code Editor (https://code.earthengine.google.com/?accept_repo=users/cnorlen-usgs/la-urban-fire). 
 
 ## Description of the data and file structure
@@ -56,10 +56,11 @@ Number of structures in DSB Zone 1 (zone_one_overlap_correct), Number of structu
   *  combined_la_fires_parcel_all_structures_data_published_20260212.csv
 
 Parcel scale data on fire impacts and urban morphology characteristics as a geopackage (.gpkg) with the same data fields as the above CSV as well as the parcel geometry (geom).
-  *  combined_la_fires_parcel_all_structures_data.gpkg
+  *  combined_la_fires_parcel_all_structures_data_published.gpkg
 
-All data in STATA .dta format used for modeling and table creation. Includes the same data fields as the above US Census block and parcel scale data.
-  *  stata_all_revised_data.dta
+All data in STATA .dta format used for neighborhood and parcel-scale modeling and table creation. Includes the same data fields as the above US Census block and parcel scale data.
+  * stata_neighborhood_data_published.dta
+  * stata_parcel_data_published.dta
 
 Cropped Landsat 9 image used for creation of Main Text figure 1 in GeoTiff format (.tif)
   *  Landsat_Image_20250114_reproject.tif
@@ -93,12 +94,18 @@ Script doing final analysis and creating all Main Text and Supplementary Figures
   * 4-manuscript-analysis.r
 
 ##STATA Code
-STATA code for running models and producing Tables 1, 2, 3, 4, S1, S2, S3, S4
-  * june_revision_dofile_submit.do
+STATA code for running neighborhood parcel-scale models and producing Tables 1, 2, 3, 4, and Supplementary Tables 1, 2, 3, 4
+  * 1_neighborhood_analysis_stata_code.do
+  * 2_parcel_analysis_stata_code.do
+  
+STATAc code for running parcel-scale models and producing Tables 
 
 ## GEE JavaScript Code
 Script for calculating the number of building footprint overlaps in each parcel and census block.
-  * building-footprint-overlap.js
+  * 1-building-footprint-overlap.js
 
-Script calculating the pre-fire urban tree cover in each parcel and census block
-  * tree-cover-census-block.js
+Script for calculating the pre-fire urban tree cover in each parcel and census block
+  * 2-tree-cover-census-block.js
+  
+Script for extracting the Landsat 9 surface reflectance background image for the study region
+  * 3-landsat-background-image.js

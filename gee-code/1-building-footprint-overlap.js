@@ -1,6 +1,6 @@
 //Created by: Carl A. Norlen
 //Created Date: 03/21/2025
-//Updated Date: 03/21/2025
+//Updated Date: 02/18/2026
 //Purpose: Calculate ammount of overlap between building footprint data
 
 //Add the building footprint data
@@ -50,7 +50,7 @@ var zone_two_intersect = function(f) {
                           return f.set({zone_two_overlap: ee.Number(filter.size())});
 };
 
-//Test out the intersection operation
+//Add the zone 0, 1, 2 intersections to the la fires footrpints
 var la_footprints_overlap = la_footprints.map(zone_zero_intersect);
 
 la_footprints_overlap = la_footprints_overlap.map(zone_one_intersect);
@@ -60,8 +60,7 @@ la_footprints_overlap = la_footprints_overlap.map(zone_two_intersect);
   // export
 Export.table.toDrive({
   'collection': la_footprints_overlap,
-  'description': 'building_footprint_overlaps',//'spatcon_annual_L578_median_500m',
-  'folder': 'Urban_Fires', //'earthEngine_outputs',
-  //Switch to GEO_JSON
+  'description': 'building_footprint_overlaps',
+  'folder': 'Urban_Fires', 
   'fileFormat': 'CSV'
 });

@@ -1,6 +1,6 @@
 //Created by: Carl A. Norlen
 //Created date: 04/02/2025
-//Updated date: 04/24/2025
+//Updated date: 02/18/2026
 
 //Add NIFC Fire Perimeters for 2025
 var fire_perimeter = ee.FeatureCollection("projects/usgs-gee-research/assets/cnorlen/NIFC_Fire_Perimeters")
@@ -37,17 +37,15 @@ var tree_cover_parcel_summary = tree_cover.unmask().reduceRegions({collection: l
   // export census block data
 Export.table.toDrive({
   'collection': tree_cover_block_summary,
-  'description': 'tree_cover_block_summary_20250424',//'spatcon_annual_L578_median_500m',
-  'folder': 'Urban_Fires', //'earthEngine_outputs',
-  //Switch to GEO_JSON
+  'description': 'tree_cover_block_summary_20250424',
+  'folder': 'Urban_Fires', 
   'fileFormat': 'CSV'
 });
 
   // export Parcel data data
 Export.table.toDrive({
   'collection': tree_cover_parcel_summary,
-  'description': 'tree_cover_parcel_summary_20250402_v2',//'spatcon_annual_L578_median_500m',
-  'folder': 'Urban_Fires', //'earthEngine_outputs',
-  //Switch to GEO_JSON
+  'description': 'tree_cover_parcel_summary_20250402_v2',
+  'folder': 'Urban_Fires', 
   'fileFormat': 'CSV'
 });
