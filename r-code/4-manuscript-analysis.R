@@ -169,11 +169,11 @@ socio.demo.block$BLOCKCE20 <- as.character(socio.demo.block$BLOCKCE20)
 combined.block.sf <- block.dins.sf |> filter(UR20 == 'U'& !is.na(structure.count) & fire.area.2025.pct > 0) |> 
   left_join(socio.demo.block |> 
               select(c('TRACTCE20', 'BLOCKCE20', 'Tpct.FA_male', 'Tpct.FA_female', 'Tpct.FA_under_5yrs', 'fire.affected_pop',
-                       'Tpct.FA_5.19_yrs','Tpct.FA_20.64_yrs', 'Tpct.FA_65.and.over_yrs._C', 'Tpct.FA_Hispanic_C', 'Tpct.FA_not_Hispanic', 
+                       'Tpct.FA_5.19_yrs','Tpct.FA_20.64_yrs', 'Tpct.FA_65.and.over_yrs._C', 'Tpct.FA_Hispanic_C', 
                        'Tpct.FA_whitep_C', 'Tpct.FA_AAp_C', 'Tpct.FA_AIANp_C', 'Tpct.FA_Ap_C', 'Tpct.NHOPIp', 'Tpct.FA_occ', 
                        'Tpct.FA_vaccant', 'Tpct.FA_owner_occ', 'Tpct.FA_renter_occ_C','ww_pct_bbg_noschooling_C', 'ww_bbg_pct_highsch_C', 
                        'ww_bbg_pct_associate_C', 'ww_bbg_pct_bachelor_C', 'ww_bbg_pct_graduate.Prof_C', 'ww_bbg_pct_belowpoverty_C', 'ww_bbg_pct_noneng_C', 'ww_bbg_pct_speak.eng_C',
-                       'PercapitaInc', 'Bpopulation')), 
+                       'PercapitaInc')), 
             by = c('TRACTCE20', 'BLOCKCE20'))
 
 #Add the parcel level data
@@ -360,7 +360,7 @@ ggsave('Fig2_fire_history.pdf',
 p3a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = structure.basal.area, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -377,7 +377,7 @@ p3a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
 p3b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = tree.cover.2022, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -395,7 +395,7 @@ p3c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = zone_zero_overlap_mean, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -413,7 +413,7 @@ p3d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = ww_bbg_pct_noneng_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -430,7 +430,7 @@ p3e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = ww_bbg_pct_bachelor_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -447,7 +447,7 @@ p3f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(
                mapping = aes(color = which.fire, x = Tpct.FA_AAp_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + #, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, size = 5) + 
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire), linewidth = 1.5) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -828,7 +828,7 @@ ps3a <- ggplot(data = all.join |> filter(DAMAGE_1 != "Inaccessible" & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -849,7 +849,7 @@ ps3b <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"),
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -864,12 +864,12 @@ ps3b
 #Mean number of structure overlaps in Zones 0 & 1
 ps3c <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTURECATEGORY %in% c('Single Residence', 'Multiple Residence' , 'Mixed Commercial/Residential') &
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
-               mapping = aes(x = as.numeric(zone_one_overlap), y = damage.binary)) +
+               mapping = aes(x = as.numeric(zone_one_overlap_correct), y = damage.binary)) +
   geom_bin2d() +
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -883,12 +883,12 @@ ps3c
 #Mean structure overlaps in Zone Two
 ps3d <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTURECATEGORY %in% c('Single Residence', 'Multiple Residence' , 'Mixed Commercial/Residential') &
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
-               mapping = aes(x = as.numeric(zone_two_overlap), y = damage.binary)) +
+               mapping = aes(x = as.numeric(zone_two_overlap_correct), y = damage.binary)) +
   geom_bin2d() +
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -907,7 +907,7 @@ ps3e <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -926,7 +926,7 @@ ps3f <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -945,7 +945,7 @@ ps3g <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01, size = 5) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -965,7 +965,7 @@ ps3h <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01, size = 5) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -985,7 +985,7 @@ ps3i <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
   scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, p.accuracy = 0.01, size = 5) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1065,7 +1065,7 @@ ggsave('FigS4_map_after_2008_pct.png',
 ps5a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = fire.area.1910to2023.pct, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1080,7 +1080,7 @@ ps5a
 ps5b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = year.built.median, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1097,7 +1097,7 @@ ps5c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = structure_value_median / 1000, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1113,7 +1113,7 @@ ps5d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = after_2008_pct, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1128,7 +1128,7 @@ ps5d
 ps5e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric(fire.area.2025.pct) > 0 & !is.na(structure.count) & !is.na(structure_value_median) & UR20 == 'U'), mapping = aes(color = which.fire, x = zone_one_overlap_mean, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1146,7 +1146,7 @@ ps5f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = zone_two_overlap_mean, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1180,7 +1180,7 @@ ps6a <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = ww_bbg_pct_belowpoverty_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1197,7 +1197,7 @@ ps6b <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = Tpct.FA_whitep_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1214,7 +1214,7 @@ ps6c <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = Tpct.FA_65.and.over_yrs._C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1230,7 +1230,7 @@ ps6d <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = Tpct.FA_Hispanic_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1246,7 +1246,7 @@ ps6e <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = Tpct.FA_Ap_C * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1263,7 +1263,7 @@ ps6f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
                mapping = aes(color = which.fire, x = (ww_pct_bbg_noschooling_C + ww_bbg_pct_highsch_C + ww_bbg_pct_associate_C) * 100, y = destroy_pct)) +
   geom_point(size = 1, alpha = 0.5) +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99, p.accuracy = 0.01) +
+                         color = which.fire), label.x.npc = 0.05, label.y.npc = 0.99) +
   geom_smooth(method = 'lm', mapping = aes(linetype = which.fire, color = which.fire)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -1275,7 +1275,7 @@ ps6f <- ggplot(data = combined.block.sf |> as.data.frame() |>  filter(as.numeric
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps6f
 
-fs6 <- ggarrange(ps6a, ps6b, ps6c, ps6d, ps6e, ps6f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f'))0
+fs6 <- ggarrange(ps6a, ps6b, ps6c, ps6d, ps6e, ps6f, nrow = 2, ncol = 3, align = "hv", common.legend = FALSE, labels = c('a', 'b', 'c', 'd', 'e', 'f'))
 
 #Save the figure
 ggsave('FigS6_fire_damage_socioeconomic_correlation_grid.png',
