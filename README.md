@@ -5,8 +5,8 @@ These data sets and scripts allow for the creation of all figures and supplement
 Norlen, C.A.; Sharma, S.; Escobedo, F.J. (2026) "Socio-Ecological Impacts of the 2025 Los Angeles Urban Fires on Communities, Neighborhoods, and Homes" Nature Communications
 
 ## Data Access
-The code and data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available in the following GitHub 
-repository (https://github.com/carlnorlen/la-urban-fires). Google Earth Engine code is also available through the Code Editor (https://code.earthengine.google.com/?accept_repo=users/cnorlen-usgs/la-urban-fire). 
+The code and processsed data sets required to create figures, and tables are available as a figshare repository (https://doi.org/10.6084/m9.figshare.29936876). The code is also available in the following GitHub 
+repository (https://github.com/carlnorlen/la-urban-fires).  
 
 ## Description of the data and file structure
 US Census Block scale urban morphology data processed for use in socio-deomgraphic analysis. This file includes the following data fields: census block identifying information such as Block code (BLOCKCE20), 
@@ -77,8 +77,8 @@ Data was derived from these publicly available sources:
   * Landsat 9 surface reflectance for 1/14/2025 retrieved from Google Earth Engine: https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC09_C02_T1_L2#bands
 
 ## Code/Software
-The code shared with this submission were written in JavaScript for Google Earth Engine (GEE) and R 4.3.2 run using RStudio.
-The code requires the tidyverse, ggpubr, sf, patchwork, tigris, tidycensus, units, osmdata, rethnicity, and gstat packages. 
+The code shared with this submission were written in JavaScript for Google Earth Engine (GEE), R 4.3.2 run using RStudio, and STATA version 19.
+The R code requires the tidyverse, ggpubr, sf, patchwork, tigris, tidycensus, units, osmdata, rethnicity, and gstat packages. 
 
 ## R Code
 Script for general geospatial data processing.
@@ -93,12 +93,10 @@ Script for merging data sets and exporting processed data for final analysis.
 Script doing final analysis and creating all Main Text and Supplementary Figures.
   * 4-manuscript-analysis.r
 
-##STATA Code
-STATA code for running neighborhood parcel-scale models and producing Tables 1, 2, 3, 4, and Supplementary Tables 1, 2, 3, 4
+## STATA Code
+STATA code for running neighborhood and parcel-scale models and producing Tables 1, 2, 3, 4, and Supplementary Tables 1, 2, 3, 4
   * 1_neighborhood_analysis_stata_code.do
   * 2_parcel_analysis_stata_code.do
-  
-STATAc code for running parcel-scale models and producing Tables 
 
 ## GEE JavaScript Code
 Script for calculating the number of building footprint overlaps in each parcel and census block.

@@ -1,7 +1,7 @@
 #Purpose: Analysis the parcel and neighborhood scale impacts of the 2025 LA Urban Fres 
 #Created by: Carl A. Norlen
 #Created date: 02/10/2025
-#Updated date: 02/18/2026
+#Updated date: 03/5/2026
 
 #Packages for analysis
 my_packages <- c('tidyverse', 'ggpubr', 'sf', 'patchwork', 'tigris', 'tidycensus', 'units', 
@@ -822,10 +822,10 @@ ggsave('FigS2_count_by_race.png',
 #Create combined figure for correlations urban morphology with structures destroyed (%)
 #Year Structure Built
 ps3a <- ggplot(data = all.join |> filter(DAMAGE_1 != "Inaccessible" & STRUCTURECATEGORY %in% c('Single Residence', 'Multiple Residence' , 'Mixed Commercial/Residential') &
-                                           !is.na(YearBuilt1) & YearBuilt1 > 1500), #
+                                           !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(YearBuilt1), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -840,13 +840,12 @@ ps3a <- ggplot(data = all.join |> filter(DAMAGE_1 != "Inaccessible" & STRUCTUREC
         axis.text.y = element_text(size = 12), axis.title.y = element_text(size = 14))
 ps3a
 
-
 #Zone Zero Overlaps
 ps3b <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTURECATEGORY %in% c('Single Residence', 'Multiple Residence' , 'Mixed Commercial/Residential') &
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(zone_zero_overlap), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"),
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -866,7 +865,7 @@ ps3c <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(zone_one_overlap_correct), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -885,7 +884,7 @@ ps3d <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(zone_two_overlap_correct), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -904,7 +903,7 @@ ps3e <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(val_struct) / 1000, y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -923,7 +922,7 @@ ps3f <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(over.65.pct), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
                          color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
@@ -942,10 +941,10 @@ ps3g <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(structure.basal.area), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) + 
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) + 
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -962,10 +961,10 @@ ps3h <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(tree.cover.2022), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
@@ -982,10 +981,10 @@ ps3i <- ggplot(data = all.join |> filter(DAMAGE_1 != 'Inaccessible' & STRUCTUREC
                                            !is.na(YearBuilt1) & YearBuilt1 > 1500), 
                mapping = aes(x = as.numeric(pop.total), y = damage.binary)) +
   geom_bin2d() +
-  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "yellow", high = "red",
+  scale_fill_gradient2(limits = c(0,2300), breaks = c(500, 1000, 1500, 2000), midpoint = 1150, low = "cornflowerblue", mid = "seashell2", high = "red",
                        na.value = 'transparent', name = "Count") +
   stat_cor(mapping = aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~"), 
-                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95, size = 5) +
+                         color = Fire_Name), label.x.npc = 0.05, label.y.npc = 0.95) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), mapping = aes(linetype = Fire_Name, color = Fire_Name)) +
   scale_color_brewer(palette = 'Dark2', type = 'seq', name = 'Fire Name') +
   scale_linetype(name = 'Fire Name') +
